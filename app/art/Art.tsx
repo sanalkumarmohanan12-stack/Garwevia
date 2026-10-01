@@ -47,7 +47,8 @@ function CalloutMark({ c }: { c: Callout }) {
 }
 
 /** One technical flat, optionally annotated with callouts and dimension lines. */
-export function GarmentFlat({ name, annotate = true, children, viewBox = '-120 -60 740 500' }: { name: keyof typeof flats; annotate?: boolean; children?: React.ReactNode; viewBox?: string }) {
+/** `markers` swaps leader-line callouts for numbered badges (legend rendered separately in HTML). */
+export function GarmentFlat({ name, annotate = true, markers = false, children, viewBox = markers ? '-50 -50 500 500' : '-120 -60 740 500' }: { name: keyof typeof flats; annotate?: boolean; markers?: boolean; children?: React.ReactNode; viewBox?: string }) {
   const f: Flat = flats[name];
   return (
     <svg className="art-svg" viewBox={viewBox} preserveAspectRatio="xMidYMid meet">
@@ -58,7 +59,13 @@ export function GarmentFlat({ name, annotate = true, children, viewBox = '-120 -
         {f.dots?.map(([x, y, r], i) => <circle key={'d' + i} className="a-shape" cx={x} cy={y} r={r} />)}
       </g>
       {annotate && f.dims.map((d, i) => <DimLine key={'m' + i} d={d} />)}
-      {annotate && f.callouts.map((c, i) => <CalloutMark key={'c' + i} c={c} />)}
+      {annotate && !markers && f.callouts.map((c, i) => <CalloutMark key={'c' + i} c={c} />)}
+      {markers && f.callouts.map((c, i) => (
+        <g key={'k' + i} className="a-fade">
+          <circle className="a-badge" cx={c.at[0]} cy={c.at[1]} r="13" />
+          <text className="a-lbl a-lbl-badge" x={c.at[0]} y={c.at[1]} dy="4.5" textAnchor="middle">{i + 1}</text>
+        </g>
+      ))}
       {children}
     </svg>
   );

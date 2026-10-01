@@ -2,20 +2,23 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Accent, Arrow, Cta, Kicker, Marquee, PageHero } from '../components';
+import { Accent, Arrow, Cta, JsonLd, Kicker, Marquee, PageHero, PhotoWall } from '../components';
+import { breadcrumbLd, glossaryLd, seo, serviceLd } from '../seo';
 import { Accordion, ExpandPanels, Journey, ScrollHighlight } from '../motion';
 import { shots, shotStyle, type Shot } from '../images';
 import { categories, rfqHref } from '../catalog';
 import { Art, CareTags, ClusterMap, KnitStructure, LabDips, Marker, NetworkHub, PomSheet, PrintPlacement, TechPackSheet, Timeline, TraceChain, WorldRoutes, YarnCones } from '../art/Art';
 import { RfqForm } from '../rfq-form';
+import { Glossary } from '../glossary';
+import { KnitCta, TechIndex, TechSections, complianceSections, developmentSections, developmentSteps, glossary, networkSections, productSections, qualitySections, qualitySteps, type Section } from '../technical';
+import { ContactChannels, MeetingBooker } from '../contact-view';
 
 type Item = { title: string; body?: string; shot?: Shot; visual?: React.ReactNode };
-type View = 'about' | 'catalog' | 'accordion' | 'journey' | 'panels' | 'rows' | 'legal';
-type Page = { kicker: string; title: string; intro: string; crumb: string; view: View; lede?: string; heading?: string; items: Item[]; note?: string; marquee?: string[] };
+type View = 'about' | 'catalog' | 'accordion' | 'journey' | 'panels' | 'contact' | 'meeting' | 'glossary' | 'legal';
+type Page = { kicker: string; title: string; intro: string; crumb: string; view: View; lede?: string; heading?: string; items: Item[]; note?: string; marquee?: string[]; sections?: Section[]; knit?: boolean; sectionsFirst?: boolean };
 
 // Hero visuals: original tech-pack illustrations per page; Products keeps its product photography.
 const heroArt: Record<string, React.ReactNode> = {
-  about: <WorldRoutes />,
   'sourcing-services': <TechPackSheet />,
   'product-development': <Marker />,
   'manufacturing-network': <NetworkHub />,
@@ -24,6 +27,14 @@ const heroArt: Record<string, React.ReactNode> = {
   'how-it-works': <WorldRoutes />,
 };
 const heroPhoto: Record<string, Shot> = { products: shots.range };
+// About hero wall: the making — knitting, cutting, sewing, checking, packing — with finished product between.
+const aboutWall: Shot[][] = [
+  [shots.knitting, shots.range, shots.measuring, shots.seamstress],
+  [shots.cutting, shots.sewingLines, shots.fleece, shots.packing],
+  [shots.factoryWide, shots.swatches, shots.floorPeople, shots.tops],
+  [shots.fabricStacks, shots.women, shots.knitting, shots.measuring],
+  [shots.seamstress, shots.packing, shots.cutting, shots.kids],
+];
 
 const pages: Record<string, Page> = {
   about: {
@@ -42,6 +53,7 @@ const pages: Record<string, Page> = {
     intro: 'Explore product types that can be developed and sourced through our manufacturing network. Specifications, MOQs, certifications and production routes are confirmed for each project.',
     lede: 'Fabric, GSM, fit, decoration, trims and packaging can be reviewed against your brief for every product. MOQ and certification availability depend on the selected manufacturing partner.',
     items: [], note: 'No public prices or fixed MOQs are listed. Send a tech pack or reference garment for project-specific costing.',
+    sections: productSections, knit: true,
   },
   'sourcing-services': {
     kicker: 'Sourcing services', crumb: 'Services', view: 'accordion', title: 'Sourcing without *the guesswork.*',
@@ -59,14 +71,15 @@ const pages: Record<string, Page> = {
   },
   'product-development': {
     kicker: 'Product development', crumb: 'Product development', view: 'journey', title: 'From idea to *production-ready.*',
-    intro: 'We can work from a complete tech pack, reference garment, specification sheet, sketch or existing product needing an alternative manufacturing route.',
+    intro: 'We work from a complete tech pack, reference garment, specification sheet or sketch — or an existing product that needs a new manufacturing route.',
     heading: 'Nine steps to *bulk.*',
-    lede: 'Available development steps depend on each project, and each one is coordinated with the selected manufacturing partner as required.',
-    items: ['Concept or tech pack', 'Fabric selection', 'Costing', 'Pattern development', 'Prototype', 'Fit review', 'Size set', 'Pre-production sample', 'Bulk production'].map(title => ({ title })),
+    lede: 'Every development step is documented — tech pack, BOM, POM chart, lab dips, strike-offs and samples — so what you approve is what gets made.',
+    items: developmentSteps.map(([title, body]) => ({ title, body })),
+    sections: developmentSections, knit: true,
   },
   'manufacturing-network': {
     kicker: 'Manufacturing network', crumb: 'Our network', view: 'panels', title: 'A network built *around your product.*',
-    intro: 'Different manufacturing partners are suited to different products. We match each brief to available capabilities across our sourcing network, starting in Tiruppur.',
+    intro: 'Different manufacturing partners suit different products. We match each knitwear brief to the capabilities available through our sourcing network — yarn, knitting, processing, decoration and garment making — starting in Tiruppur.',
     lede: 'From yarn to finished garment, every stage of apparel manufacturing is within reach of our network.',
     items: [
       { title: 'Fabrics', body: 'Single jersey, rib, interlock, piqué, French terry, fleece, cotton blends and performance fabrics. Organic and recycled options depend on partner availability.', visual: <KnitStructure /> },
@@ -75,45 +88,64 @@ const pages: Record<string, Page> = {
       { title: 'Garment manufacturing', body: 'Pattern, cutting, sewing, finishing and packing coordinated through selected partners.', visual: <Marker /> },
     ],
     note: 'Manufacturing partners are selected according to product, capacity, commercial and compliance requirements. Partner facilities are not represented as GARWEVIA-owned factories.',
+    sections: networkSections, knit: true,
   },
   'quality-assurance': {
     kicker: 'Quality assurance', crumb: 'Quality', view: 'journey', title: 'Quality managed *at every stage.*',
-    intro: 'Our quality assurance framework makes expectations visible from development to final inspection. The inspection scope is agreed with the buyer according to project requirements.',
-    heading: 'Eleven *checkpoints.*',
-    lede: 'Each checkpoint is reviewed or coordinated according to the inspection plan agreed with you.',
-    items: ['Requirement verification', 'Fabric & trim review', 'Pre-production sample', 'Size set review', 'Pre-production meeting', 'Inline inspection', 'Measurement verification', 'Workmanship inspection', 'Packing verification', 'Final inspection', 'Shipment release recommendation'].map(title => ({ title })),
-    note: 'A project QC report can include PO, style, factory, quantities, defect counts, measurements, photos, corrective actions and inspection result.',
+    intro: 'A process-driven quality framework for knitwear — from specification review to shipment release. Inspection scope, test program and acceptance levels are agreed with each buyer.',
+    heading: 'Twelve *checkpoints.*',
+    lede: 'Each checkpoint is performed or coordinated according to the quality plan agreed with you, and reported with measurements, photos and corrective actions.',
+    items: qualitySteps.map(([title, body]) => ({ title, body })),
+    note: 'A project QC report can include PO, style, factory, quantities, defect counts by class, measurement results, photos, corrective actions and the inspection result.',
+    sections: qualitySections, knit: true,
   },
   'compliance-sustainability': {
     kicker: 'Compliance & sustainability', crumb: 'Compliance', view: 'panels', title: 'Responsible manufacturing *matters.*',
-    intro: 'We can assess manufacturing partners against a buyer’s compliance requirements and request relevant evidence as part of partner selection.',
-    marquee: ['GOTS', 'GRS', 'OEKO-TEX', 'WRAP', 'SMETA / SEDEX', 'amfori BSCI', 'ISO'],
+    intro: 'We assess manufacturing partners against each buyer’s product-safety, social-compliance and certification requirements, and request current evidence as part of partner selection.',
+    marquee: ['GOTS', 'GRS', 'OEKO-TEX', 'WRAP', 'SMETA / Sedex', 'amfori BSCI', 'ISO 9001 · 14001 · 45001'],
     items: [
-      { title: 'Partner credentials', body: 'Selected manufacturing partners within our network may hold credentials including GOTS, GRS, OEKO-TEX, WRAP, SMETA / SEDEX, amfori BSCI or ISO.', visual: <CareTags /> },
-      { title: 'Material options', body: 'Organic cotton and recycled-fiber options may be assessed when available and supported by evidence.', visual: <YarnCones /> },
-      { title: 'Operational practices', body: 'Traceability, chemical management, waste reduction and lower-impact processing can be discussed against specific partner capabilities.', visual: <LabDips /> },
+      { title: 'Partner credentials', body: 'Selected partners may hold GOTS, GRS or OEKO-TEX certification, WRAP certification, SMETA audit reports, amfori BSCI audit status or ISO management systems — verified per program.', visual: <CareTags /> },
+      { title: 'Material options', body: 'Organic cotton, recycled polyester and recycled cotton can be assessed where available and supported by chain-of-custody evidence.', visual: <YarnCones /> },
+      { title: 'Chemical & process control', body: 'RSL and MRSL compliance, responsible chemical management, water and effluent treatment are reviewed against specific partner capabilities.', visual: <LabDips /> },
     ],
     note: 'Certification availability and validity are confirmed at the manufacturing-partner level for each project. GARWEVIA does not claim these certifications as its own.',
+    sections: complianceSections, knit: true, sectionsFirst: true,
   },
   'how-it-works': {
     kicker: 'The sourcing journey', crumb: 'How it works', view: 'journey', title: 'From brief *to bulk.*',
-    intro: 'A clear sequence gives your team visibility from first requirement to shipment.',
+    intro: 'A clear, documented sequence gives your team visibility from first requirement to shipment release.',
+    lede: 'GARWEVIA combines product knowledge, manufacturing access, technical quality control, compliance awareness and on-ground execution — so international buyers can make knitted apparel in India with greater visibility and control.',
     heading: 'Eight steps. *Full visibility.*',
-    items: [['Submit your requirement', 'Upload a tech pack, reference image or product brief.'], ['Requirement review', 'We evaluate specifications, quantity, timelines and compliance needs.'], ['Manufacturing match', 'Suitable manufacturing partners are shortlisted.'], ['Costing', 'Commercial options are developed and assumptions clarified.'], ['Sampling', 'Development and approvals move the product toward production.'], ['Production', 'Manufacturing begins after commercial and sample approvals.'], ['Quality assurance', 'Production monitoring and inspections follow the agreed plan.'], ['Shipment', 'Packing and logistics are coordinated.']].map(([title, body]) => ({ title, body })),
+    items: [
+      ['Submit your requirement', 'Send a tech pack, reference garment or brief — with fabric, GSM, quantity, target FOB and delivery window if known.'],
+      ['Technical review', 'We review construction, fabric parameters, colour, testing, certification and packing requirements.'],
+      ['Manufacturing match', 'Partner factories are shortlisted for capability, capacity, compliance status and MOQ.'],
+      ['Costing', 'Fabric consumption, processes and trims are costed; FOB and assumptions are made explicit.'],
+      ['Development & sampling', 'Lab dips, strike-offs, proto, fit, size set and PP sample move the style to approval.'],
+      ['Bulk production', 'Production starts after PP approval and the pre-production meeting, with inline inspection.'],
+      ['Final inspection', 'Final random inspection to the agreed AQL, with measurement and packing verification.'],
+      ['Shipment', 'Cartons, shipping marks and documents are checked and a release recommendation is issued.'],
+    ].map(([title, body]) => ({ title, body })),
+    knit: true,
+  },
+  'knitwear-glossary': {
+    kicker: 'Knitwear glossary', crumb: 'Glossary', view: 'glossary', title: 'Knitwear, *explained.*',
+    intro: 'Plain-language definitions of the technical, quality and compliance terms used across knitwear sourcing — from GSM and spirality to AQL, GOTS and SMETA.',
+    items: [], knit: true,
   },
   contact: {
-    kicker: 'Contact', crumb: 'Contact', view: 'rows', title: 'Let’s talk about *your next product.*',
-    intro: 'Share your sourcing question or send a complete brief. Our team is based in Tiruppur, Tamil Nadu, India.',
-    items: [
-      { title: 'Business enquiries', body: 'Email address to be confirmed before launch.' },
-      { title: 'Sourcing & RFQs', body: 'Use the Start a Project form to send your requirements and supporting files.' },
-      { title: 'Schedule a discussion', body: 'Include your preferred time zone and availability in your message. We will follow up to arrange a call.' },
-    ],
-    note: 'Phone, WhatsApp, LinkedIn and exact office location will be published once verified.',
+    kicker: 'Contact', crumb: 'Contact', view: 'contact', title: 'Let’s talk about *your next product.*',
+    intro: 'Email, call, message us on WhatsApp or book a Teams meeting. Our team is based in Tiruppur, Tamil Nadu — India’s knitwear capital.',
+    items: [],
+  },
+  'schedule-a-meeting': {
+    kicker: 'Schedule a meeting', crumb: 'Schedule a meeting', view: 'meeting', title: 'Book a *Teams call.*',
+    intro: 'Choose a time that suits you. We’ll walk through your product, quantities and timelines — and the best manufacturing route for it.',
+    items: [],
   },
   'privacy-policy': {
     kicker: 'Legal', crumb: 'Privacy policy', view: 'legal', title: 'Privacy policy.', intro: 'This policy describes how GARWEVIA handles information submitted through this website.',
-    items: [{ title: 'Information collected', body: 'Contact details, company information, product requirements and files submitted through our forms.' }, { title: 'Use of information', body: 'We use submissions to assess enquiries, respond to buyers and coordinate sourcing opportunities.' }, { title: 'Retention & requests', body: 'Contact us to request access, correction or deletion. A final retention schedule and contact address must be confirmed before launch.' }],
+    items: [{ title: 'Information collected', body: 'Contact details, company information, product requirements and files submitted through our forms.' }, { title: 'Use of information', body: 'We use submissions to assess enquiries, respond to buyers and coordinate sourcing opportunities.' }, { title: 'Retention & requests', body: 'Email info@garwevia.com to request access, correction or deletion of your information. A final retention schedule must be confirmed before launch.' }],
     note: 'Legal text is a launch draft and requires review with actual business details, providers and jurisdiction.',
   },
   'terms-of-use': {
@@ -128,6 +160,8 @@ const pages: Record<string, Page> = {
   },
 };
 
+const serviceSlugs = ['sourcing-services', 'product-development', 'manufacturing-network', 'quality-assurance', 'compliance-sustainability'];
+
 const pad = (i: number) => String(i + 1).padStart(2, '0');
 
 export function generateStaticParams() {
@@ -137,7 +171,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const page = pages[slug];
-  return { title: slug === 'start-a-project' ? 'Start a Project' : page ? page.title.replaceAll('*', '') : 'Page', description: page?.intro || 'Send GARWEVIA your apparel sourcing brief.' };
+  const s = seo[slug];
+  const title = s?.title ?? (page ? page.title.replaceAll('*', '') : 'Start a Project');
+  const description = s?.description ?? page?.intro ?? 'Send GARWEVIA your apparel sourcing brief.';
+  return {
+    title, description, keywords: s?.keywords,
+    alternates: { canonical: '/' + slug },
+    openGraph: { title, description, url: '/' + slug },
+    twitter: { title, description },
+  };
 }
 
 function Note({ children }: { children: React.ReactNode }) {
@@ -194,7 +236,6 @@ function Body({ page }: { page: Page }) {
                   <small>Common fabric bases</small>
                   <div>{c.fabrics.map(fb => <span key={fb}>{fb}</span>)}</div>
                 </div>
-                <Link className="pill pill-sand" href={rfqHref(c.name)} data-reveal>Get costing for {c.name} <span className="pill-dot" /></Link>
               </div>
             </section>
           ))}
@@ -212,19 +253,12 @@ function Body({ page }: { page: Page }) {
       return <div className="wrap"><Journey title={<Accent text={page.heading!} />} steps={items} /></div>;
     case 'panels':
       return <ExpandPanels items={items.map(it => ({ title: it.title, body: it.body!, visual: it.visual }))} />;
-    case 'rows':
-      return (
-        <div className="wrap contact-rows">
-          {items.map((it, i) => (
-            <div key={it.title} className="contact-row" data-reveal>
-              <span>{pad(i)}</span><h2>{it.title}</h2><p>{it.body}</p>
-            </div>
-          ))}
-          <Link className="contact-row contact-row-cta" href="/start-a-project" data-reveal>
-            <span>→</span><h2>Send a sourcing brief</h2><p>Start a project <Arrow /></p>
-          </Link>
-        </div>
-      );
+    case 'contact':
+      return <ContactChannels />;
+    case 'glossary':
+      return <div className="wrap"><Glossary items={glossary} /></div>;
+    case 'meeting':
+      return <MeetingBooker />;
     case 'legal':
       return (
         <div className="legal wrap">
@@ -238,14 +272,28 @@ function Body({ page }: { page: Page }) {
 
 export default async function InnerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  if (slug === 'start-a-project') return <RfqForm />;
+  if (slug === 'start-a-project') return <><RfqForm /><JsonLd data={breadcrumbLd('Start a project', '/start-a-project')} /></>;
   const page = pages[slug];
   if (!page) notFound();
-  const legal = page.view === 'legal';
+  const bare = page.view === 'legal' || page.view === 'contact' || page.view === 'meeting';
   return (
     <>
+      {slug === 'about' ? (
+        <PhotoWall columns={aboutWall} className="wall-about">
+          <nav className="crumbs" aria-label="Breadcrumb">
+            <Link href="/">Home</Link><span aria-hidden="true">—</span><span aria-current="page">About</span>
+          </nav>
+          <p className="kicker">{page.kicker}</p>
+          <h1 className="wall-title"><Accent text={page.title} /></h1>
+          <p className="wall-lede">{page.intro}</p>
+          <ul className="hero-facts">{['Based in Tiruppur', 'Buyer-focused sourcing', 'Shipping worldwide'].map(f => <li key={f}>{f}</li>)}</ul>
+        </PhotoWall>
+      ) : (
       <PageHero crumb={page.crumb} kicker={page.kicker} title={page.title} intro={page.intro} image={heroPhoto[slug]} art={heroArt[slug]} />
+      )}
+      {page.sections && <TechIndex sections={page.sections} />}
       {page.marquee && <Marquee words={page.marquee} tone="sand" />}
+      {page.sectionsFirst && page.sections && <TechSections sections={page.sections} />}
       <section className={'content content-' + page.view}>
         {page.lede && (
           <div className="wrap content-lede">
@@ -256,8 +304,12 @@ export default async function InnerPage({ params }: { params: Promise<{ slug: st
         {page.heading && page.view === 'accordion' && <h2 className="wrap content-heading" data-reveal><Accent text={page.heading} /></h2>}
         <Body page={page} />
         {page.note && <Note>{page.note}</Note>}
+        {page.sections && !page.sectionsFirst && <TechSections sections={page.sections} />}
       </section>
-      {!legal && <Cta />}
+      {!bare && (page.knit ? <KnitCta /> : <Cta />)}
+      <JsonLd data={breadcrumbLd(page.crumb, '/' + slug)} />
+      {serviceSlugs.includes(slug) && <JsonLd data={serviceLd(page.kicker, '/' + slug, seo[slug]?.description ?? page.intro)} />}
+      {slug === 'knitwear-glossary' && <JsonLd data={glossaryLd(glossary)} />}
     </>
   );
 }

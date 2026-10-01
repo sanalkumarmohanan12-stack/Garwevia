@@ -5,7 +5,18 @@
  */
 export type Callout = { at: [number, number]; to: [number, number]; label: string };
 export type Dim = { from: [number, number]; to: [number, number]; label: string; offset?: number };
-export type Flat = { name: string; outline: string[]; seams: string[]; stitches: string[]; dots?: [number, number, number][]; callouts: Callout[]; dims: Dim[] };
+export type Fabric = 'jersey' | 'pique' | 'fleece' | 'performance';
+export type Colorway = { name: string; hex: string };
+export type Flat = {
+  name: string; outline: string[]; seams: string[]; stitches: string[]; dots?: [number, number, number][]; callouts: Callout[]; dims: Dim[];
+  /** Rendering details used by the coloured garment renders (art/Render.tsx). */
+  fabric?: Fabric; colorways?: Colorway[];
+  trims?: string[];   // rib / collar areas
+  panels?: string[];  // same-fabric pieces with a subtle edge (pocket, placket, waistband)
+  inside?: string[];  // visible garment interior (back neck, hood opening)
+  cords?: string[];   // drawcords
+  hardware?: 'button' | 'snap' | 'eyelet';
+};
 
 export const flats: Record<string, Flat> = {
   tee: {
@@ -19,6 +30,10 @@ export const flats: Record<string, Flat> = {
       { at: [300, 394], to: [470, 420], label: 'Coverstitch hem 2 cm' },
     ],
     dims: [{ from: [86, 150], to: [314, 150], label: 'A · ½ chest' }, { from: [0, 40], to: [0, 408], label: 'B · body length' }],
+    fabric: 'jersey',
+    inside: ['M150 40 Q200 54 250 40 Q200 82 150 40 Z'],
+    trims: ['M150 40 Q200 82 250 40 L257 44 Q200 100 143 44 Z'],
+    colorways: [{ name: 'Optic white', hex: '#EFEBE3' }, { name: 'Navy', hex: '#23314B' }, { name: 'Heather grey', hex: '#A7A9AC' }, { name: 'Black', hex: '#222326' }, { name: 'Sand', hex: '#CDB48A' }],
   },
   polo: {
     name: 'Piqué polo',
@@ -33,6 +48,11 @@ export const flats: Record<string, Flat> = {
       { at: [349, 142], to: [470, 190], label: 'Rib cuff' },
     ],
     dims: [{ from: [86, 215], to: [314, 215], label: 'A · ½ chest' }],
+    fabric: 'pique', hardware: 'button',
+    inside: ['M150 40 Q200 52 250 40 L200 80 Z'],
+    trims: ['M150 40 L134 50 L178 106 L200 80 Z', 'M250 40 L266 50 L222 106 L200 80 Z', 'M372 148 L334 170 L324 153 L362 131 Z', 'M28 148 L66 170 L76 153 L38 131 Z'],
+    panels: ['M188 80 L188 190 L212 190 L212 80 Z'],
+    colorways: [{ name: 'Navy', hex: '#22304A' }, { name: 'White', hex: '#EEEAE2' }, { name: 'Bottle green', hex: '#2F4A3A' }, { name: 'Burgundy', hex: '#6A2531' }],
   },
   hoodie: {
     name: 'Pullover hoodie',
@@ -41,7 +61,8 @@ export const flats: Record<string, Flat> = {
       'M150 48 C128 10 150 -18 200 -20 C250 -18 272 10 250 48 L236 52 C234 14 166 14 164 52 Z',
     ],
     seams: ['M164 52 L200 96 L236 52', 'M383 350 L347 362', 'M17 350 L53 362', 'M80 382 L320 382', 'M128 262 L272 262 L292 352 L108 352 Z', 'M326 74 L318 150', 'M74 74 L82 150'],
-    stitches: ['M186 88 L182 160', 'M214 88 L218 160', 'M134 270 L266 270', 'M130 276 L114 346', 'M270 276 L286 346'],
+    stitches: ['M134 270 L266 270', 'M130 276 L114 346', 'M270 276 L286 346'],
+    cords: ['M186 88 L182 160', 'M214 88 L218 160'],
     dots: [[182, 162, 3], [218, 162, 3]],
     callouts: [
       { at: [214, 0], to: [470, -10], label: '2-panel lined hood' },
@@ -49,13 +70,19 @@ export const flats: Record<string, Flat> = {
       { at: [300, 396], to: [470, 400], label: '2×2 rib hem & cuffs' },
       { at: [120, 200], to: [-80, 230], label: 'Fleece · 320 gsm' },
     ],
-    dims: [{ from: [82, 170], to: [318, 170], label: 'A · ½ chest' }],
+    dims: [{ from: [82, 215], to: [318, 215], label: 'A · ½ chest' }],
+    fabric: 'fleece', hardware: 'eyelet',
+    inside: ['M164 52 C166 14 234 14 236 52 L200 96 Z'],
+    trims: ['M388 372 L352 384 L347 362 L383 350 Z', 'M12 372 L48 384 L53 362 L17 350 Z', 'M80 382 L320 382 L320 410 L80 410 Z'],
+    panels: ['M128 262 L272 262 L292 352 L108 352 Z'],
+    colorways: [{ name: 'Charcoal', hex: '#3A3C41' }, { name: 'Heather grey', hex: '#A5A7AA' }, { name: 'Olive', hex: '#5B6147' }, { name: 'Sand', hex: '#CBB38C' }],
   },
   jogger: {
     name: 'Fleece jogger',
     outline: ['M112 56 L288 56 L304 360 L304 404 L226 404 L226 360 L204 170 L200 160 L196 170 L174 360 L174 404 L96 404 L96 360 Z', 'M112 20 L288 20 L288 56 L112 56 Z'],
     seams: ['M304 360 L226 360', 'M174 360 L96 360', 'M200 56 L200 160', 'M284 64 L262 150', 'M116 64 L138 150'],
-    stitches: ['M112 30 L288 30', 'M112 46 L288 46', 'M190 40 C188 70 180 86 176 100', 'M210 40 C212 70 220 86 224 100'],
+    stitches: ['M112 30 L288 30', 'M112 46 L288 46'],
+    cords: ['M192 40 C188 70 180 86 176 100', 'M208 40 C212 70 220 86 224 100'],
     dots: [[192, 38, 3], [208, 38, 3]],
     callouts: [
       { at: [250, 38], to: [470, 10], label: 'Elastic waist · drawcord' },
@@ -63,6 +90,9 @@ export const flats: Record<string, Flat> = {
       { at: [280, 390], to: [470, 400], label: 'Rib ankle cuff' },
     ],
     dims: [{ from: [112, 20], to: [288, 20], label: 'Waist relaxed', offset: -30 }, { from: [330, 56], to: [330, 404], label: 'Outseam' }],
+    fabric: 'fleece', hardware: 'eyelet',
+    trims: ['M112 20 L288 20 L288 56 L112 56 Z', 'M304 360 L304 404 L226 404 L226 360 Z', 'M174 360 L174 404 L96 404 L96 360 Z'],
+    colorways: [{ name: 'Heather grey', hex: '#A9ABAE' }, { name: 'Black', hex: '#222326' }, { name: 'Navy', hex: '#24324C' }, { name: 'Olive', hex: '#596046' }],
   },
   legging: {
     name: 'Performance legging',
@@ -76,6 +106,9 @@ export const flats: Record<string, Flat> = {
       { at: [150, 200], to: [-80, 200], label: 'Nylon-elastane' },
     ],
     dims: [{ from: [300, 16], to: [300, 404], label: 'Outseam' }],
+    fabric: 'performance',
+    panels: ['M114 16 L286 16 L286 62 L114 62 Z', 'M200 168 L210 184 L200 200 L190 184 Z'],
+    colorways: [{ name: 'Black', hex: '#1F2024' }, { name: 'Olive', hex: '#4F5541' }, { name: 'Slate', hex: '#4A5567' }, { name: 'Mocha', hex: '#6D594D' }],
   },
   romper: {
     name: 'Baby romper',
@@ -89,14 +122,8 @@ export const flats: Record<string, Flat> = {
       { at: [230, 220], to: [470, 210], label: 'Interlock · organic option' },
     ],
     dims: [{ from: [114, 150], to: [286, 150], label: 'A · ½ chest' }],
+    fabric: 'jersey', hardware: 'snap',
+    trims: ['M164 40 Q200 76 236 40 L240 44 Q200 86 160 44 Z'],
+    colorways: [{ name: 'Ecru', hex: '#EDE6D6' }, { name: 'Sage', hex: '#A8B59A' }, { name: 'Blush', hex: '#D9B7AC' }, { name: 'Sky', hex: '#AEC2D2' }],
   },
 };
-
-export const heroFlats: { word: string; flat: keyof typeof flats }[] = [
-  { word: 'T-shirts', flat: 'tee' },
-  { word: 'polos', flat: 'polo' },
-  { word: 'hoodies', flat: 'hoodie' },
-  { word: 'joggers', flat: 'jogger' },
-  { word: 'leggings', flat: 'legging' },
-  { word: 'babywear', flat: 'romper' },
-];

@@ -1,12 +1,13 @@
 'use client';
 import Lenis from 'lenis';
 import Image from 'next/image';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { shotStyle, type Shot } from './images';
+import { StageArt, type SceneName } from './art/Stages';
 
 export const lenisRef: { current: Lenis | null } = { current: null };
+
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Calls `fn` on every animation frame while the page scrolls (and once on mount/resize). */
@@ -45,51 +46,62 @@ export function MotionRoot() {
   return null;
 }
 
-/** Home hero: route map backdrop and a technical flat that redraws with each rotating product word. */
-export function HomeHero({ items, backdrop }: { items: { word: string; name: string; drawing: React.ReactNode }[]; backdrop: React.ReactNode }) {
-  const [i, setI] = useState(0);
+const stageIcons: Record<string, React.ReactNode> = {
+  pack: <><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4M9 12h6M9 16h4" /></>,
+  sample: <><path d="M8 4 4 7l2 4 2-1v10h8V10l2 1 2-4-4-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4Z" /></>,
+  fabric: <><path d="M4 7c2.5-2 5.5-2 8 0s5.5 2 8 0M4 12c2.5-2 5.5-2 8 0s5.5 2 8 0M4 17c2.5-2 5.5-2 8 0s5.5 2 8 0" /></>,
+  cut: <><circle cx="6" cy="7" r="2.5" /><circle cx="6" cy="17" r="2.5" /><path d="M8.2 8.3 20 16M8.2 15.7 20 8" /></>,
+  stitch: <><path d="M3 18h18" /><path d="M5 14h2M10 14h2M15 14h2" /><path d="M13 3v8M11 11h4" /><path d="M8 3h10v4H8z" /></>,
+  print: <><path d="M12 3l2.4 5 5.6.8-4 3.9 1 5.5-5-2.7-5 2.7 1-5.5-4-3.9 5.6-.8z" /></>,
+  check: <><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" /><path d="m8.5 12 2.5 2.5 4.5-5" /></>,
+  ship: <><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" /><circle cx="7" cy="17.5" r="1.8" /><circle cx="17" cy="17.5" r="1.8" /></>,
+};
+
+export type Stage = { icon: SceneName & keyof typeof stageIcons; title: string; body: string };
+
+const STAGE_MS = 3400;
+const Icon = ({ name, size = 22 }: { name: keyof typeof stageIcons; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{stageIcons[name]}</svg>
+);
+
+/**
+ * Garment workflow from tech pack to dispatch, as an expanding photo strip:
+ * the active stage opens wide with its photo and description; hover or click holds a stage.
+ */
+export function Workflow({ stages }: { stages: Stage[] }) {
+  const [active, setActive] = useState(0);
+  const [held, setHeld] = useState(false);
   useEffect(() => {
-    if (reduced()) return;
-    const t = setInterval(() => setI(n => n + 1), 3800);
-    return () => clearInterval(t);
-  }, []);
-  const active = i % items.length;
-  const words = items.map(it => it.word);
+    if (held || reduced()) return;
+    const t = setTimeout(() => setActive(n => (n + 1) % stages.length), STAGE_MS);
+    return () => clearTimeout(t);
+  }, [held, active, stages.length]);
+  const pick = (n: number) => { setHeld(true); setActive(n); };
   return (
-    <section className="hero">
-      <div className="hero-map" aria-hidden="true">{backdrop}</div>
-      <div className="hero-shade" aria-hidden="true" />
-      <div className="hero-flats" aria-hidden="true">
-        {items.map((it, n) => <div key={it.word} className={n === active ? 'hero-flat art is-active' : 'hero-flat art'}>{it.drawing}</div>)}
+    <div className="flow" onMouseLeave={() => setHeld(false)}>
+      <div className="flow-head">
+        <span>From tech pack to dispatch</span>
+        <span className="flow-count">{String(active + 1).padStart(2, '0')} / {String(stages.length).padStart(2, '0')}</span>
       </div>
-      <div className="hero-content wrap">
-        <p className="kicker hero-kicker">Tiruppur, India · Apparel sourcing &amp; manufacturing</p>
-        <h1 className="hero-title">
-          <span className="line"><span>Your</span></span>{' '}
-          <span className="line rotator" aria-live="polite">
-            {words.map((w, n) => <em key={w} className={n === active ? 'is-active' : n === (active + words.length - 1) % words.length ? 'is-leaving' : ''}>{w}</em>)}
-            <em className="rotator-sizer" aria-hidden="true">{words.reduce((a, b) => (b.length > a.length ? b : a))}</em>
-          </span>
-          <br />
-          <span className="line"><span>made right in India.</span></span>
-        </h1>
-        <div className="hero-foot">
-          <p>GARWEVIA matches your product to the right manufacturer and manages every step, from sampling and production to quality control and shipment.</p>
-          <div className="hero-ctas">
-            <Link className="pill pill-sand" href="/start-a-project">Start a project <span className="pill-dot" /></Link>
-            <Link className="pill pill-glass" href="/how-it-works">How it works</Link>
-          </div>
-        </div>
+      <ol className="flow-strip">
+        {stages.map((s, n) => (
+          <li key={s.title} className={n === active ? 'flow-card is-active' : n < active ? 'flow-card is-done' : 'flow-card'}>
+            <button type="button" onClick={() => pick(n)} onMouseEnter={() => pick(n)} onFocus={() => pick(n)} aria-current={n === active ? 'step' : undefined}>
+              <StageArt name={s.icon} active={n === active} />
+              <span className="flow-shade" aria-hidden="true" />
+              <span className="flow-top"><span className="flow-num">{String(n + 1).padStart(2, '0')}</span><Icon name={s.icon} /></span>
+              <span className="flow-cap"><span className="flow-title">{s.title}</span><span className="flow-body">{s.body}</span></span>
+              {n === active && !held && <i className="flow-bar" key={active} style={{ animationDuration: STAGE_MS + 'ms' }} />}
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div className="flow-dots" aria-hidden="true">
+        {stages.map((s, n) => (
+          <button key={s.title} type="button" tabIndex={-1} className={n === active ? 'is-active' : n < active ? 'is-done' : ''} onClick={() => pick(n)}><Icon name={s.icon} size={16} /></button>
+        ))}
       </div>
-      <div className="hero-meta wrap" aria-hidden="true">
-        <div className="hero-progress">
-          {items.map((it, n) => (
-            <span key={it.word} className={n === active ? 'is-active' : ''}><i /><b>{String(n + 1).padStart(2, '0')}</b> {it.name}</span>
-          ))}
-        </div>
-        <span className="scroll-cue">Scroll <i /></span>
-      </div>
-    </section>
+    </div>
   );
 }
 
@@ -137,29 +149,97 @@ export function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <span ref={el}>{n}{suffix}</span>;
 }
 
-/** Pins the section and converts vertical scroll into horizontal travel of its track. */
-export function HorizontalScroll({ children }: { children: React.ReactNode }) {
-  const section = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
+/**
+ * Native horizontal carousel: trackpad swipe, click-and-drag, arrow buttons and touch.
+ * Vertical scrolling passes straight through, so the page never pauses on this section.
+ */
+export function Carousel({ head, children, label }: { head: React.ReactNode; children: React.ReactNode; label: string }) {
+  const rail = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
-  useScrollFrame(() => {
-    const s = section.current, t = track.current;
-    if (!s || !t) return;
-    const pinned = window.matchMedia('(min-width: 900px)').matches && !reduced();
-    const distance = Math.max(0, t.scrollWidth - window.innerWidth);
-    s.style.height = pinned ? `${distance + window.innerHeight}px` : '';
-    if (!pinned) { t.style.transform = ''; return; }
-    const p = Math.min(1, Math.max(0, -s.getBoundingClientRect().top / Math.max(1, distance)));
-    t.style.transform = `translate3d(${-p * distance}px,0,0)`;
-    if (bar.current) bar.current.style.transform = `scaleX(${p})`;
-  });
+  const [edge, setEdge] = useState({ start: true, end: false });
+
+  useEffect(() => {
+    const r = rail.current;
+    if (!r) return;
+    const update = () => {
+      const max = r.scrollWidth - r.clientWidth;
+      const p = max > 0 ? r.scrollLeft / max : 0;
+      if (bar.current) bar.current.style.transform = `scaleX(${Math.max(0.06, p)})`;
+      setEdge(e => {
+        const next = { start: r.scrollLeft < 8, end: r.scrollLeft > max - 8 };
+        return e.start === next.start && e.end === next.end ? e : next;
+      });
+    };
+
+    // Click-and-drag for mouse users (touch and trackpads already scroll natively).
+    let down = false, moved = false, startX = 0, startLeft = 0;
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false; startX = e.clientX; startLeft = r.scrollLeft;
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) { moved = true; r.classList.add('is-dragging'); r.setPointerCapture(e.pointerId); }
+      if (moved) r.scrollLeft = startLeft - dx;
+    };
+    const onUp = () => {
+      if (!down) return;
+      down = false;
+      r.classList.remove('is-dragging');
+    };
+    // Swallow the click that ends a drag so cards are not opened by accident.
+    const onClick = (e: MouseEvent) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } };
+
+    update();
+    r.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    r.addEventListener('pointerdown', onDown);
+    r.addEventListener('pointermove', onMove);
+    r.addEventListener('pointerup', onUp);
+    r.addEventListener('pointercancel', onUp);
+    r.addEventListener('click', onClick, true);
+    return () => {
+      r.removeEventListener('scroll', update); window.removeEventListener('resize', update);
+      r.removeEventListener('pointerdown', onDown); r.removeEventListener('pointermove', onMove);
+      r.removeEventListener('pointerup', onUp); r.removeEventListener('pointercancel', onUp);
+      r.removeEventListener('click', onClick, true);
+    };
+  }, []);
+
+  const step = (dir: 1 | -1) => {
+    const r = rail.current;
+    if (!r) return;
+    const card = r.firstElementChild as HTMLElement | null;
+    const amount = card ? card.getBoundingClientRect().width + 16 : r.clientWidth * 0.8;
+    r.scrollBy({ left: dir * amount, behavior: reduced() ? 'auto' : 'smooth' });
+  };
+
   return (
-    <section ref={section} className="hscroll">
-      <div className="hscroll-sticky">
-        <div ref={track} className="hscroll-track">{children}</div>
-        <div className="hscroll-bar" aria-hidden="true"><span ref={bar} /></div>
+    <section className="showcase" aria-label={label}>
+      <div className="wrap showcase-head">
+        <div>{head}</div>
+        <div className="showcase-nav">
+          <button type="button" aria-label="Previous" onClick={() => step(-1)} disabled={edge.start}><Chevron dir="left" /></button>
+          <button type="button" aria-label="Next" onClick={() => step(1)} disabled={edge.end}><Chevron dir="right" /></button>
+        </div>
+      </div>
+      <div ref={rail} className="showcase-rail" data-lenis-prevent-horizontal tabIndex={0}>
+        {children}
+      </div>
+      <div className="wrap showcase-foot" aria-hidden="true">
+        <div className="showcase-bar"><span ref={bar} /></div>
+        <span className="showcase-hint">Swipe, drag or use the arrows</span>
       </div>
     </section>
+  );
+}
+
+function Chevron({ dir }: { dir: 'left' | 'right' }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d={dir === 'left' ? 'M12 4 6 10l6 6' : 'M8 4l6 6-6 6'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

@@ -1,3 +1,14 @@
 import type { MetadataRoute } from 'next';
-const routes=['','about','products','sourcing-services','product-development','manufacturing-network','quality-assurance','compliance-sustainability','how-it-works','start-a-project','contact','privacy-policy','terms-of-use','cookie-policy'];
-export default function sitemap():MetadataRoute.Sitemap{const base=process.env.NEXT_PUBLIC_SITE_URL||'https://garwevia.com';return routes.map(route=>({url:`${base}/${route}`,lastModified:new Date(),changeFrequency:'monthly',priority:route===''?1:.7}))}
+import { SITE } from './seo';
+
+const updated = new Date('2026-09-30');
+const routes: [string, number][] = [
+  ['', 1], ['products', 0.9], ['start-a-project', 0.9], ['manufacturing-network', 0.8], ['quality-assurance', 0.8],
+  ['compliance-sustainability', 0.8], ['product-development', 0.8], ['sourcing-services', 0.8], ['how-it-works', 0.7],
+  ['about', 0.7], ['knitwear-glossary', 0.6], ['contact', 0.7], ['schedule-a-meeting', 0.5],
+  ['privacy-policy', 0.2], ['terms-of-use', 0.2], ['cookie-policy', 0.2],
+];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return routes.map(([route, priority]) => ({ url: route ? `${SITE}/${route}` : SITE, lastModified: updated, changeFrequency: 'monthly', priority }));
+}
