@@ -2,20 +2,20 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Accent, Arrow, Cta, JsonLd, Kicker, Marquee, PageHero, PhotoWall } from '../components';
+import { AccessoryGrid, Accent, Arrow, CertGrid, Cta, JsonLd, Kicker, PageHero, SectionHead, Steps } from '../components';
 import { breadcrumbLd, glossaryLd, seo, serviceLd } from '../seo';
-import { Accordion, ExpandPanels, Journey, ScrollHighlight } from '../motion';
+import { Accordion } from '../motion';
 import { shots, shotStyle, type Shot } from '../images';
 import { categories, rfqHref } from '../catalog';
 import { Art, CareTags, ClusterMap, KnitStructure, LabDips, Marker, NetworkHub, PomSheet, PrintPlacement, TechPackSheet, Timeline, TraceChain, WorldRoutes, YarnCones } from '../art/Art';
 import { RfqForm } from '../rfq-form';
 import { Glossary } from '../glossary';
 import { KnitCta, TechIndex, TechSections, complianceSections, developmentSections, developmentSteps, glossary, networkSections, productSections, qualitySections, qualitySteps, type Section } from '../technical';
-import { ContactChannels, MeetingBooker } from '../contact-view';
+import { ContactChannels } from '../contact-view';
 
 type Item = { title: string; body?: string; shot?: Shot; visual?: React.ReactNode };
-type View = 'about' | 'catalog' | 'accordion' | 'journey' | 'panels' | 'contact' | 'meeting' | 'glossary' | 'legal';
-type Page = { kicker: string; title: string; intro: string; crumb: string; view: View; lede?: string; heading?: string; items: Item[]; note?: string; marquee?: string[]; sections?: Section[]; knit?: boolean; sectionsFirst?: boolean };
+type View = 'about' | 'catalog' | 'accordion' | 'journey' | 'panels' | 'contact' | 'glossary' | 'legal';
+type Page = { kicker: string; title: string; intro: string; crumb: string; view: View; lede?: string; heading?: string; items: Item[]; note?: string; marquee?: string[]; sections?: Section[]; knit?: boolean; certs?: boolean };
 
 // Hero visuals: original tech-pack illustrations per page; Products keeps its product photography.
 const heroArt: Record<string, React.ReactNode> = {
@@ -26,16 +26,7 @@ const heroArt: Record<string, React.ReactNode> = {
   'compliance-sustainability': <TraceChain />,
   'how-it-works': <WorldRoutes />,
 };
-const heroPhoto: Record<string, Shot> = { products: shots.range };
-// About hero wall: the making — knitting, cutting, sewing, checking, packing — with finished product between.
-const aboutWall: Shot[][] = [
-  [shots.knitting, shots.range, shots.measuring, shots.seamstress],
-  [shots.cutting, shots.sewingLines, shots.fleece, shots.packing],
-  [shots.factoryWide, shots.swatches, shots.floorPeople, shots.tops],
-  [shots.fabricStacks, shots.women, shots.knitting, shots.measuring],
-  [shots.seamstress, shots.packing, shots.cutting, shots.kids],
-];
-
+const heroPhoto: Record<string, Shot> = { products: shots.range, about: shots.sewingLines };
 const pages: Record<string, Page> = {
   about: {
     kicker: 'About GARWEVIA', crumb: 'About', view: 'about', title: 'Global sourcing. *Local expertise.*',
@@ -49,8 +40,8 @@ const pages: Record<string, Page> = {
     ],
   },
   products: {
-    kicker: 'Product capabilities', crumb: 'Products', view: 'catalog', title: 'Products built around *your brief.*',
-    intro: 'Explore product types that can be developed and sourced through our manufacturing network. Specifications, MOQs, certifications and production routes are confirmed for each project.',
+    kicker: 'Knitwear & accessories', crumb: 'Products', view: 'catalog', title: 'Knitwear and trims, built around *your brief.*',
+    intro: 'Private label knitwear and the accessories that finish it — labels, tags, closures, cords and packaging — developed and sourced through our manufacturing network in Tiruppur.',
     lede: 'Fabric, GSM, fit, decoration, trims and packaging can be reviewed against your brief for every product. MOQ and certification availability depend on the selected manufacturing partner.',
     items: [], note: 'No public prices or fixed MOQs are listed. Send a tech pack or reference garment for project-specific costing.',
     sections: productSections, knit: true,
@@ -100,16 +91,15 @@ const pages: Record<string, Page> = {
     sections: qualitySections, knit: true,
   },
   'compliance-sustainability': {
-    kicker: 'Compliance & sustainability', crumb: 'Compliance', view: 'panels', title: 'Responsible manufacturing *matters.*',
+    kicker: 'Certifications & compliance', crumb: 'Certifications', view: 'panels', title: 'Certified knitwear, *responsibly made.*',
     intro: 'We assess manufacturing partners against each buyer’s product-safety, social-compliance and certification requirements, and request current evidence as part of partner selection.',
-    marquee: ['GOTS', 'GRS', 'OEKO-TEX', 'WRAP', 'SMETA / Sedex', 'amfori BSCI', 'ISO 9001 · 14001 · 45001'],
     items: [
       { title: 'Partner credentials', body: 'Selected partners may hold GOTS, GRS or OEKO-TEX certification, WRAP certification, SMETA audit reports, amfori BSCI audit status or ISO management systems — verified per program.', visual: <CareTags /> },
       { title: 'Material options', body: 'Organic cotton, recycled polyester and recycled cotton can be assessed where available and supported by chain-of-custody evidence.', visual: <YarnCones /> },
       { title: 'Chemical & process control', body: 'RSL and MRSL compliance, responsible chemical management, water and effluent treatment are reviewed against specific partner capabilities.', visual: <LabDips /> },
     ],
     note: 'Certification availability and validity are confirmed at the manufacturing-partner level for each project. GARWEVIA does not claim these certifications as its own.',
-    sections: complianceSections, knit: true, sectionsFirst: true,
+    sections: complianceSections, knit: true, certs: true,
   },
   'how-it-works': {
     kicker: 'The sourcing journey', crumb: 'How it works', view: 'journey', title: 'From brief *to bulk.*',
@@ -135,12 +125,7 @@ const pages: Record<string, Page> = {
   },
   contact: {
     kicker: 'Contact', crumb: 'Contact', view: 'contact', title: 'Let’s talk about *your next product.*',
-    intro: 'Email, call, message us on WhatsApp or book a Teams meeting. Our team is based in Tiruppur, Tamil Nadu — India’s knitwear capital.',
-    items: [],
-  },
-  'schedule-a-meeting': {
-    kicker: 'Schedule a meeting', crumb: 'Schedule a meeting', view: 'meeting', title: 'Book a *Teams call.*',
-    intro: 'Choose a time that suits you. We’ll walk through your product, quantities and timelines — and the best manufacturing route for it.',
+    intro: 'Email, call or message us on WhatsApp — and follow GARWEVIA on LinkedIn. Our team is based in Tiruppur, Tamil Nadu — India’s knitwear capital.',
     items: [],
   },
   'privacy-policy': {
@@ -183,7 +168,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 function Note({ children }: { children: React.ReactNode }) {
-  return <aside className="note wrap" data-reveal><span>Note</span><p>{children}</p></aside>;
+  return <aside className="note wrap"><span>Note</span><p>{children}</p></aside>;
 }
 
 function Body({ page }: { page: Page }) {
@@ -196,9 +181,9 @@ function Body({ page }: { page: Page }) {
             <article key={it.title} className="split-row">
               <Art className="split-img" label={it.title}>{it.visual}</Art>
               <div className="split-text">
-                <span className="split-num" data-reveal>{pad(i)}</span>
-                <h2 data-reveal>{it.title}</h2>
-                <p data-reveal>{it.body}</p>
+                <span className="split-num">{pad(i)}</span>
+                <h2>{it.title}</h2>
+                <p>{it.body}</p>
               </div>
             </article>
           ))}
@@ -210,6 +195,7 @@ function Body({ page }: { page: Page }) {
           <nav className="cat-nav" aria-label="Product categories">
             <div className="wrap chips">
               {categories.map(c => <a key={c.slug} className="chip" href={'#' + c.slug}>{c.name} <sup>{c.products.length}</sup></a>)}
+              <a className="chip chip-alt" href="#accessories">Accessories &amp; trims</a>
             </div>
           </nav>
           {categories.map((c, i) => (
@@ -219,10 +205,10 @@ function Body({ page }: { page: Page }) {
                 <figcaption className="illustrative">Illustrative imagery</figcaption>
               </figure>
               <div className="cat-body">
-                <p className="cat-index" data-reveal>{pad(i)} <span>/ {pad(categories.length - 1)}</span></p>
-                <h2 data-reveal>{c.name}</h2>
-                <p className="cat-intro" data-reveal>{c.intro}</p>
-                <ul className="cat-products" data-reveal>
+                <p className="cat-index">{pad(i)} <span>/ {pad(categories.length - 1)}</span></p>
+                <h2>{c.name}</h2>
+                <p className="cat-intro">{c.intro}</p>
+                <ul className="cat-products">
                   {c.products.map(p => (
                     <li key={p}>
                       <Link href={rfqHref(c.name, p)}>
@@ -232,14 +218,24 @@ function Body({ page }: { page: Page }) {
                     </li>
                   ))}
                 </ul>
-                <div className="cat-fabrics" data-reveal>
+                <div className="cat-fabrics">
                   <small>Common fabric bases</small>
                   <div>{c.fabrics.map(fb => <span key={fb}>{fb}</span>)}</div>
                 </div>
               </div>
             </section>
           ))}
-          <div className="wrap quote-kit" data-reveal>
+          <section id="accessories" className="sec acc-sec">
+            <div className="wrap">
+              <SectionHead kicker="Accessories & trims" title="The details that *finish the garment.*" intro="Sourced to your brand standards and colour references, approved on a trim card, then attached in production — or supplied as a standalone accessories program." />
+              <AccessoryGrid />
+              <div className="inline-cta">
+                <p>Send your trim card or artwork and quantities for accessory costing.</p>
+                <Link className="btn btn-primary" href={rfqHref('Accessories & trims')}>Request accessory costing <Arrow /></Link>
+              </div>
+            </div>
+          </section>
+          <div className="wrap quote-kit">
             <p className="kicker">To quote quickly, send us</p>
             <ol>
               {['Tech pack or reference garment', 'Fabric and GSM, if known', 'Quantity per style and colour', 'Target FOB price', 'Delivery window and destination'].map((t, n) => <li key={t}><small>{pad(n)}</small>{t}</li>)}
@@ -250,15 +246,31 @@ function Body({ page }: { page: Page }) {
     case 'accordion':
       return <div className="wrap"><Accordion items={items.map(it => ({ title: it.title, body: it.body! }))} /></div>;
     case 'journey':
-      return <div className="wrap"><Journey title={<Accent text={page.heading!} />} steps={items} /></div>;
+      return (
+        <div className="wrap">
+          {page.heading && <h2 className="content-heading"><Accent text={page.heading} /></h2>}
+          <Steps steps={items.map(it => ({ title: it.title, body: it.body }))} />
+        </div>
+      );
     case 'panels':
-      return <ExpandPanels items={items.map(it => ({ title: it.title, body: it.body!, visual: it.visual }))} />;
+      return (
+        <div className="wrap panel-grid">
+          {items.map((it, i) => (
+            <article key={it.title} className="panel-card">
+              {it.visual && <Art className="panel-card-art" label={it.title}>{it.visual}</Art>}
+              <div>
+                <span className="panel-num">{pad(i)}</span>
+                <h3>{it.title}</h3>
+                <p>{it.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      );
     case 'contact':
       return <ContactChannels />;
     case 'glossary':
       return <div className="wrap"><Glossary items={glossary} /></div>;
-    case 'meeting':
-      return <MeetingBooker />;
     case 'legal':
       return (
         <div className="legal wrap">
@@ -275,36 +287,30 @@ export default async function InnerPage({ params }: { params: Promise<{ slug: st
   if (slug === 'start-a-project') return <><RfqForm /><JsonLd data={breadcrumbLd('Start a project', '/start-a-project')} /></>;
   const page = pages[slug];
   if (!page) notFound();
-  const bare = page.view === 'legal' || page.view === 'contact' || page.view === 'meeting';
+  const bare = page.view === 'legal' || page.view === 'contact';
   return (
     <>
-      {slug === 'about' ? (
-        <PhotoWall columns={aboutWall} className="wall-about">
-          <nav className="crumbs" aria-label="Breadcrumb">
-            <Link href="/">Home</Link><span aria-hidden="true">—</span><span aria-current="page">About</span>
-          </nav>
-          <p className="kicker">{page.kicker}</p>
-          <h1 className="wall-title"><Accent text={page.title} /></h1>
-          <p className="wall-lede">{page.intro}</p>
-          <ul className="hero-facts">{['Based in Tiruppur', 'Buyer-focused sourcing', 'Shipping worldwide'].map(f => <li key={f}>{f}</li>)}</ul>
-        </PhotoWall>
-      ) : (
       <PageHero crumb={page.crumb} kicker={page.kicker} title={page.title} intro={page.intro} image={heroPhoto[slug]} art={heroArt[slug]} />
+      {page.sections && <TechIndex sections={page.sections} extra={page.certs ? [['certification-frameworks', 'Certification frameworks']] : []} />}
+      {page.certs && (
+        <section className="sec" id="certification-frameworks">
+          <div className="wrap">
+            <SectionHead kicker="Certification frameworks" title="Every major knitwear *certification.*" intro="Organic and recycled content, chemical safety, responsible fibres, social compliance and management systems — sourced through partner factories and suppliers that hold them." />
+            <CertGrid />
+          </div>
+        </section>
       )}
-      {page.sections && <TechIndex sections={page.sections} />}
-      {page.marquee && <Marquee words={page.marquee} tone="sand" />}
-      {page.sectionsFirst && page.sections && <TechSections sections={page.sections} />}
       <section className={'content content-' + page.view}>
         {page.lede && (
           <div className="wrap content-lede">
             <Kicker>{page.crumb}</Kicker>
-            <ScrollHighlight text={page.lede} className="highlight-sm" />
+            <p>{page.lede}</p>
           </div>
         )}
-        {page.heading && page.view === 'accordion' && <h2 className="wrap content-heading" data-reveal><Accent text={page.heading} /></h2>}
+        {page.heading && page.view === 'accordion' && <h2 className="wrap content-heading"><Accent text={page.heading} /></h2>}
         <Body page={page} />
         {page.note && <Note>{page.note}</Note>}
-        {page.sections && !page.sectionsFirst && <TechSections sections={page.sections} />}
+        {page.sections && <TechSections sections={page.sections} />}
       </section>
       {!bare && (page.knit ? <KnitCta /> : <Cta />)}
       <JsonLd data={breadcrumbLd(page.crumb, '/' + slug)} />

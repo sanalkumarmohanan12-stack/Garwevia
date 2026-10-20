@@ -260,20 +260,6 @@ export const qualitySections: Section[] = [
 /* ------------------------------------------------------------------ Compliance & sustainability */
 export const complianceSections: Section[] = [
   {
-    id: 'certifications', kicker: 'Certification & responsible manufacturing', title: 'Certified partners, *verified per program.*',
-    intro: 'Where a program needs a certificate or audit, we source from manufacturing partners that hold it — and check its scope and validity for your order.',
-    cards: [
-      { title: 'GOTS', sub: 'Global Organic Textile Standard', points: ['Certified organic textile processing', 'Organic fibre supply chain', 'Chemical restrictions', 'Environmental and social criteria'], foot: 'Selected partner factories may hold valid GOTS certification depending on buyer requirements.' },
-      { title: 'GRS', sub: 'Global Recycled Standard', points: ['Recycled fibre content', 'Chain of custody', 'Traceability', 'Environmental and social requirements'], foot: 'GRS-certified manufacturing options may be sourced where recycled materials and traceability are required.' },
-      { title: 'OEKO-TEX', sub: 'STANDARD 100 by OEKO-TEX', points: ['Harmful-substance testing', 'Textile safety', 'Product-level certification'], foot: 'OEKO-TEX certified fabric, trims or manufacturing options can be considered according to project requirements.' },
-      { title: 'WRAP', sub: 'Worldwide Responsible Accredited Production', body: 'Social-compliance certification for sewn-product manufacturing.', points: ['Lawful workplace practices', 'No forced or child labour', 'Working hours and compensation', 'Health, safety and security', 'Environmental practices'], foot: 'WRAP-certified manufacturing partners may be selected where required.' },
-      { title: 'SMETA / Sedex', sub: 'Ethical audit methodology · responsible-sourcing platform', body: 'Sedex is a responsible-sourcing platform; SMETA is an ethical-audit methodology. Neither is a product certification.', points: ['Labour standards', 'Health and safety', 'Environment', 'Business ethics'], foot: 'GARWEVIA can source from manufacturing partners with current SMETA audit reports or active Sedex participation where required by the buyer.' },
-      { title: 'amfori BSCI', sub: 'Social-compliance monitoring framework', body: 'A monitoring and supply-chain improvement framework — not a product certification.', points: ['Working conditions', 'Occupational health and safety', 'Working hours and compensation', 'Freedom of association', 'No child or forced labour', 'Ethical business behaviour'], foot: 'Partner factories with amfori BSCI audit status may be selected according to buyer requirements.' },
-      { title: 'ISO', sub: 'Management-system standards', points: ['ISO 9001 — Quality management', 'ISO 14001 — Environmental management', 'ISO 45001 — Occupational health & safety'], foot: 'Selected manufacturing partners may maintain ISO-certified management systems such as ISO 9001, ISO 14001 or ISO 45001.' },
-    ],
-    disclaimer: 'Certifications, audit status, scope, facility coverage, expiry dates and transaction eligibility are verified at the individual manufacturing-partner level for each sourcing program. GARWEVIA does not represent itself as the certificate holder unless specifically stated.',
-  },
-  {
     id: 'garment-safety', kicker: 'Garment safety & compliance', title: 'Built for *the destination market.*',
     statement: 'Applicable legal and buyer requirements depend on product category and destination market.',
     groups: [
@@ -346,6 +332,17 @@ export const glossary: [string, string][] = [
   ['Tech pack', 'The full technical specification for a style: sketches, measurements, materials, construction and artwork.'],
   ['TOP sample', 'Top of production — a sample taken from the first bulk output for approval.'],
   ['WRAP', 'Worldwide Responsible Accredited Production — a social-compliance certification for sewn-product facilities.'],
+  ['OCS', 'Organic Content Standard — verifies the presence and amount of organic material, with chain of custody.'],
+  ['RCS', 'Recycled Claim Standard — verifies recycled input and chain of custody, without GRS’s social and chemical criteria.'],
+  ['OEKO-TEX STeP', 'Sustainable Textile & Leather Production — facility-level certification for environmental and social performance.'],
+  ['ZDHC', 'Zero Discharge of Hazardous Chemicals — a programme setting the MRSL and wastewater guidelines for textile processing.'],
+  ['bluesign', 'A system that manages chemical inputs across textile production to remove harmful substances at source.'],
+  ['Better Cotton', 'A programme promoting more sustainable cotton farming; claims are made through a mass-balance system.'],
+  ['SA8000', 'A social-accountability standard covering labour rights, health and safety and management systems.'],
+  ['FSC', 'Forest Stewardship Council — certifies responsibly sourced paper and board, used for hang tags and packaging.'],
+  ['Trim card', 'A sheet carrying physical samples of every approved trim — labels, buttons, zippers, threads — for a style.'],
+  ['Woven label', 'A label woven on a jacquard loom (damask, taffeta or satin), used for brand and size labelling.'],
+  ['Heat-transfer label', 'A tagless label printed onto the garment with heat and pressure, common in T-shirts and activewear.'],
 ];
 
 /* ------------------------------------------------------------------ Rendering */
@@ -362,16 +359,16 @@ function SectionBlock({ s, alt }: { s: Section; alt: boolean }) {
       <div className="wrap tech-head">
         <div>
           <Kicker>{s.kicker}</Kicker>
-          <h2 data-reveal><Accent text={s.title} /></h2>
+          <h2><Accent text={s.title} /></h2>
         </div>
-        {s.intro && <p data-reveal>{s.intro}</p>}
+        {s.intro && <p>{s.intro}</p>}
       </div>
       <div className="wrap tech-body">
-        {s.statement && <blockquote className="tech-statement" data-reveal>{s.statement}</blockquote>}
+        {s.statement && <blockquote className="tech-statement">{s.statement}</blockquote>}
         {s.steps && (
           <ol className="tech-steps" style={cols(s.steps.length)}>
             {s.steps.map(([title, body], i) => (
-              <li key={title} data-reveal>
+              <li key={title}>
                 <span>{String(i + 1).padStart(2, '0')}</span>
                 <h3>{title}</h3>
                 <p>{body}</p>
@@ -381,11 +378,11 @@ function SectionBlock({ s, alt }: { s: Section; alt: boolean }) {
         )}
         {s.items && (
           <dl className="tech-defs" style={cols(s.items.length)}>
-            {s.items.map(([term, def]) => <div key={term} data-reveal><dt>{term}</dt><dd>{def}</dd></div>)}
+            {s.items.map(([term, def]) => <div key={term}><dt>{term}</dt><dd>{def}</dd></div>)}
           </dl>
         )}
         {s.table && (
-          <figure className="tech-table" data-reveal>
+          <figure className="tech-table">
             <figcaption>{s.table.caption}</figcaption>
             <table>
               <thead><tr>{s.table.head.map(h => <th key={h} scope="col">{h}</th>)}</tr></thead>
@@ -397,7 +394,7 @@ function SectionBlock({ s, alt }: { s: Section; alt: boolean }) {
         {s.groups && (
           <div className="tech-groups" style={cols(s.groups.length)}>
             {s.groups.map(g => (
-              <div key={g.name} className="tech-group" data-reveal>
+              <div key={g.name} className="tech-group">
                 <h3>{g.name}</h3>
                 <Chips terms={g.terms} />
               </div>
@@ -407,7 +404,7 @@ function SectionBlock({ s, alt }: { s: Section; alt: boolean }) {
         {s.cards && (
           <div className="tech-cards" style={cols(s.cards.length)}>
             {s.cards.map(c => (
-              <article key={c.title} className={'tech-card' + (c.tone ? ' tone-' + c.tone : '')} data-reveal>
+              <article key={c.title} className={'tech-card' + (c.tone ? ' tone-' + c.tone : '')}>
                 <h3>{c.title}</h3>
                 {c.sub && <p className="tech-card-sub">{c.sub}</p>}
                 {c.body && <p>{c.body}</p>}
@@ -417,19 +414,20 @@ function SectionBlock({ s, alt }: { s: Section; alt: boolean }) {
             ))}
           </div>
         )}
-        {s.disclaimer && <aside className="tech-disclaimer" data-reveal><strong>Important</strong><p>{s.disclaimer}</p></aside>}
-        {s.note && <p className="tech-note" data-reveal>{s.note}</p>}
+        {s.disclaimer && <aside className="tech-disclaimer"><strong>Important</strong><p>{s.disclaimer}</p></aside>}
+        {s.note && <p className="tech-note">{s.note}</p>}
       </div>
     </section>
   );
 }
 
 /** Jump links to a page's technical sections — placed directly under the page hero. */
-export function TechIndex({ sections }: { sections: Section[] }) {
+export function TechIndex({ sections, extra = [] }: { sections: Section[]; extra?: [string, string][] }) {
   return (
     <nav className="tech-index" aria-label="On this page">
       <div className="wrap">
         <span>On this page</span>
+        {extra.map(([id, label]) => <a key={id} href={'#' + id}>{label}</a>)}
         {sections.map(s => <a key={s.id} href={'#' + s.id}>{s.kicker}</a>)}
       </div>
     </nav>
@@ -443,22 +441,22 @@ export function TechSections({ sections }: { sections: Section[] }) {
 
 /** Page-end call to action for technical pages. */
 export function KnitCta() {
-  const send = ['Tech pack', 'Product reference', 'Fabric composition', 'GSM', 'Quantity', 'Colour requirements', 'Certification requirements', 'Quality standards', 'Target FOB', 'Delivery timeline'];
+  const send = ['Tech pack', 'Product reference', 'Fabric composition & GSM', 'Quantity per style & colour', 'Colour requirements', 'Trims & packaging', 'Certification requirements', 'Quality standards', 'Target FOB', 'Delivery timeline'];
   return (
-    <section className="cta knit-cta">
-      <div className="cta-inner wrap">
-        <Kicker>Developing a knitwear program?</Kicker>
-        <h2 className="cta-title" data-reveal>Send us your brief.<br /><em>We’ll take it from there.</em></h2>
-        <div className="knit-cta-row">
-          <div data-reveal>
-            <p className="knit-cta-label">Send GARWEVIA your</p>
-            <ol className="knit-cta-list">{send.map((s, i) => <li key={s}><span>{String(i + 1).padStart(2, '0')}</span>{s}</li>)}</ol>
+    <section className="knit-cta">
+      <div className="wrap knit-cta-inner">
+        <div>
+          <Kicker>Developing a knitwear program?</Kicker>
+          <h2>Send us your brief. <em>We’ll take it from there.</em></h2>
+          <div className="knit-cta-actions">
+            <Link className="btn btn-primary" href="/start-a-project">Submit your tech pack <Arrow /></Link>
+            <Link className="btn btn-ghost" href="/contact">Discuss your requirement</Link>
           </div>
-          <div className="knit-cta-actions" data-reveal>
-            <Link className="pill pill-sand" href="/start-a-project">Submit your tech pack <span className="pill-dot" /></Link>
-            <Link className="text-cta" href="/schedule-a-meeting">Discuss your knitwear requirement <Arrow /></Link>
-            <Link className="knit-cta-gloss" href="/knitwear-glossary">New to a term? Read the knitwear glossary</Link>
-          </div>
+          <Link className="knit-cta-gloss" href="/knitwear-glossary">New to a term? Read the knitwear glossary</Link>
+        </div>
+        <div>
+          <p className="knit-cta-label">Helpful to include</p>
+          <ol className="knit-cta-list">{send.map((s, i) => <li key={s}><span>{String(i + 1).padStart(2, '0')}</span>{s}</li>)}</ol>
         </div>
       </div>
     </section>

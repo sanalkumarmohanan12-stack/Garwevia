@@ -5,7 +5,7 @@ import { Arrow } from './components';
 
 type Field = { name: string; label: string; type?: string; options?: string[]; required?: boolean; placeholder?: string };
 const buyer: Field[] = [{ name: 'fullName', label: 'Full name', required: true }, { name: 'company', label: 'Company name', required: true }, { name: 'website', label: 'Company website', type: 'url' }, { name: 'email', label: 'Business email', type: 'email', required: true }, { name: 'phone', label: 'Phone / WhatsApp' }, { name: 'country', label: 'Country', required: true }, { name: 'buyerType', label: 'Buyer type', options: ['Brand', 'Retailer', 'Wholesaler', 'Importer', 'Private Label', 'Promotional Apparel', 'Other'] }];
-const product: Field[] = [{ name: 'category', label: 'Product category', options: ['Tops', 'Fleece', 'Women', 'Kids & Baby', 'Performance', 'Other'], required: true }, { name: 'description', label: 'Product description', type: 'textarea', required: true, placeholder: 'Garment type, construction, references…' }, { name: 'quantity', label: 'Estimated quantity' }, { name: 'styles', label: 'Number of styles' }, { name: 'quantityPerStyle', label: 'Quantity per style' }, { name: 'colors', label: 'Number of colors' }, { name: 'fabric', label: 'Fabric composition' }, { name: 'gsm', label: 'GSM' }, { name: 'sizes', label: 'Size range' }, { name: 'fit', label: 'Fit' }, { name: 'decoration', label: 'Decoration / printing / embroidery' }, { name: 'wash', label: 'Wash requirements' }, { name: 'labels', label: 'Label requirements' }, { name: 'packaging', label: 'Packaging requirements' }, { name: 'certification', label: 'Certification requirements' }];
+const product: Field[] = [{ name: 'category', label: 'Product category', options: ['Tops', 'Fleece', 'Women', 'Kids & Baby', 'Performance', 'Underwear', 'Accessories & trims', 'Other'], required: true }, { name: 'description', label: 'Product description', type: 'textarea', required: true, placeholder: 'Garment type, construction, references…' }, { name: 'quantity', label: 'Estimated quantity' }, { name: 'styles', label: 'Number of styles' }, { name: 'quantityPerStyle', label: 'Quantity per style' }, { name: 'colors', label: 'Number of colors' }, { name: 'fabric', label: 'Fabric composition' }, { name: 'gsm', label: 'GSM' }, { name: 'sizes', label: 'Size range' }, { name: 'fit', label: 'Fit' }, { name: 'decoration', label: 'Decoration / printing / embroidery' }, { name: 'wash', label: 'Wash requirements' }, { name: 'labels', label: 'Label requirements' }, { name: 'packaging', label: 'Packaging requirements' }, { name: 'certification', label: 'Certification requirements' }];
 const commercial: Field[] = [{ name: 'targetPrice', label: 'Target FOB price' }, { name: 'currency', label: 'Preferred currency', options: ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'INR', 'Other'] }, { name: 'moq', label: 'Expected MOQ' }, { name: 'destinationCountry', label: 'Destination country' }, { name: 'destinationPort', label: 'Destination port' }, { name: 'deliveryDate', label: 'Target delivery date', type: 'date' }, { name: 'annualVolume', label: 'Expected annual volume' }];
 const steps = [{ title: 'About you', sub: 'Who we’ll be working with' }, { title: 'The product', sub: 'What you want made' }, { title: 'Commercials', sub: 'Price, volume and delivery' }, { title: 'Files & notes', sub: 'Tech packs and anything else' }];
 
@@ -99,7 +99,7 @@ export function RfqForm({ visual }: { visual?: React.ReactNode }) {
             <span className="rfq-done-mark">✓</span>
             <h2>Brief <em>received.</em></h2>
             <p>Thank you. Our sourcing team will review your requirement and contact you regarding manufacturing options.</p>
-            <Link className="pill pill-dark" href="/">Back to home <span className="pill-dot" /></Link>
+            <Link className="btn btn-primary" href="/">Back to home</Link>
           </div>
         ) : (
           <form onSubmit={submit} encType="multipart/form-data" noValidate>
@@ -136,10 +136,10 @@ export function RfqForm({ visual }: { visual?: React.ReactNode }) {
             </fieldset>
 
             <div className="rfq-nav">
-              {step > 0 ? <button type="button" className="pill pill-outline" onClick={() => go(step - 1)}>Back</button> : <span />}
+              {step > 0 ? <button type="button" className="btn btn-ghost" onClick={() => go(step - 1)}>Back</button> : <span />}
               {step < steps.length - 1
-                ? <button type="button" className="pill pill-dark" onClick={next}>Continue <Arrow /></button>
-                : <button type="submit" className="pill pill-sand" disabled={state === 'sending'}>{state === 'sending' ? 'Submitting…' : 'Submit sourcing brief'} <Arrow /></button>}
+                ? <button type="button" className="btn btn-primary" onClick={next}>Continue <Arrow /></button>
+                : <button type="submit" className="btn btn-primary" disabled={state === 'sending'}>{state === 'sending' ? 'Submitting…' : 'Submit sourcing brief'} <Arrow /></button>}
             </div>
             <p aria-live="polite" className="rfq-status">
               {state === 'error' && <span className="rfq-error">Your brief could not be submitted. Please try again.</span>}

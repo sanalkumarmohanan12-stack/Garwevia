@@ -12,9 +12,9 @@ type Seo = { title: string; description: string; keywords: string[] };
 /** One primary search intent per page, plus close variants buyers type. */
 export const seo: Record<string, Seo> = {
   home: {
-    title: 'Knitwear Sourcing & Apparel Manufacturing in Tiruppur, India | GARWEVIA',
-    description: 'GARWEVIA is a Tiruppur-based apparel sourcing and manufacturing-management partner for international brands — T-shirts, hoodies, polos, babywear and activewear, from tech pack to shipment.',
-    keywords: ['apparel manufacturer India', 'knitwear manufacturer India', 'clothing manufacturer Tiruppur', 'garment sourcing agent India', 'private label clothing manufacturer', 'custom T-shirt manufacturer', 'hoodie manufacturer India', 'OEM apparel manufacturer', 'sourcing agent Tiruppur', 'knitwear sourcing India'],
+    title: 'Knitwear & Garment Accessories Sourcing in Tiruppur, India | GARWEVIA',
+    description: 'GARWEVIA is a Tiruppur-based sourcing and manufacturing partner for knitwear and garment accessories — T-shirts, hoodies, polos, babywear, activewear, labels, tags, buttons, zippers and packaging, from tech pack to shipment.',
+    keywords: ['apparel manufacturer India', 'knitwear manufacturer India', 'clothing manufacturer Tiruppur', 'garment sourcing agent India', 'private label clothing manufacturer', 'custom T-shirt manufacturer', 'hoodie manufacturer India', 'OEM apparel manufacturer', 'sourcing agent Tiruppur', 'knitwear sourcing India', 'garment accessories supplier India', 'garment trims sourcing', 'woven labels and hang tags supplier'],
   },
   about: {
     title: 'About GARWEVIA — Apparel Sourcing Partner in Tiruppur, India',
@@ -22,9 +22,9 @@ export const seo: Record<string, Seo> = {
     keywords: ['apparel sourcing company India', 'Tiruppur sourcing agent', 'garment buying house India', 'knitwear sourcing partner', 'India clothing supplier'],
   },
   products: {
-    title: 'Custom Knitwear Manufacturing — T-Shirts, Hoodies, Polos, Babywear',
-    description: 'Private label T-shirts, polos, hoodies, sweatshirts, joggers, leggings, kidswear, baby rompers and activewear, developed to your tech pack through manufacturing partners in India.',
-    keywords: ['custom T-shirt manufacturer India', 'polo shirt manufacturer', 'hoodie and sweatshirt manufacturer', 'jogger manufacturer', 'legging manufacturer', 'baby romper manufacturer', 'organic babywear manufacturer', 'kidswear manufacturer India', 'activewear manufacturer India', 'blank T-shirt supplier', 'oversized T-shirt manufacturer', 'French terry hoodie manufacturer'],
+    title: 'Custom Knitwear & Garment Accessories — T-Shirts, Hoodies, Labels, Trims',
+    description: 'Private label T-shirts, polos, hoodies, joggers, leggings, kidswear and activewear — plus woven labels, hang tags, buttons, zippers, drawcords, patches and packaging — sourced through partners in India.',
+    keywords: ['custom T-shirt manufacturer India', 'polo shirt manufacturer', 'hoodie and sweatshirt manufacturer', 'jogger manufacturer', 'legging manufacturer', 'baby romper manufacturer', 'organic babywear manufacturer', 'kidswear manufacturer India', 'activewear manufacturer India', 'blank T-shirt supplier', 'oversized T-shirt manufacturer', 'French terry hoodie manufacturer', 'woven label manufacturer', 'hang tag supplier', 'garment buttons and zippers supplier', 'drawcord and elastic supplier', 'embroidered patch supplier', 'apparel packaging polybags', 'garment trims sourcing India'],
   },
   'sourcing-services': {
     title: 'Apparel Sourcing Services in India — Garment Sourcing Agent',
@@ -47,9 +47,9 @@ export const seo: Record<string, Seo> = {
     keywords: ['garment quality inspection India', 'AQL inspection', 'final random inspection', 'inline inspection', 'garment testing AATCC', 'shrinkage testing', 'colourfastness testing', '4-point fabric inspection', 'third-party inspection Tiruppur', 'QC for apparel'],
   },
   'compliance-sustainability': {
-    title: 'GOTS, OEKO-TEX, GRS, WRAP & BSCI Certified Clothing Partners',
-    description: 'Source from partner factories with GOTS, GRS, OEKO-TEX, WRAP, SMETA / Sedex, amfori BSCI or ISO credentials — verified per program. CPSIA, REACH and RSL compliance for knitwear.',
-    keywords: ['GOTS certified clothing manufacturer India', 'OEKO-TEX certified garment manufacturer', 'GRS recycled apparel', 'WRAP certified factory India', 'amfori BSCI factory', 'SMETA audited supplier', 'sustainable clothing manufacturer India', 'organic cotton clothing manufacturer', 'CPSIA compliant childrenswear', 'REACH compliant apparel'],
+    title: 'Knitwear Certifications — GOTS, OCS, GRS, OEKO-TEX, WRAP, BSCI, SA8000',
+    description: 'Source knitwear through partner factories and suppliers holding GOTS, OCS, GRS, RCS, OEKO-TEX STANDARD 100 & STeP, ZDHC, bluesign, Better Cotton, Fairtrade, WRAP, SMETA, amfori BSCI, SA8000 and ISO — verified per program.',
+    keywords: ['GOTS certified clothing manufacturer India', 'OEKO-TEX certified garment manufacturer', 'GRS recycled apparel', 'WRAP certified factory India', 'amfori BSCI factory', 'SMETA audited supplier', 'sustainable clothing manufacturer India', 'organic cotton clothing manufacturer', 'CPSIA compliant childrenswear', 'REACH compliant apparel', 'OCS certified', 'RCS recycled claim standard', 'OEKO-TEX STeP', 'ZDHC MRSL', 'bluesign', 'Better Cotton', 'Fairtrade cotton', 'SA8000 factory India', 'Higg FEM'],
   },
   'how-it-works': {
     title: 'How Apparel Sourcing from India Works — Brief to Shipment',
@@ -63,13 +63,8 @@ export const seo: Record<string, Seo> = {
   },
   contact: {
     title: 'Contact GARWEVIA — Clothing Sourcing in Tiruppur, India',
-    description: `Email ${contact.email}, call ${contact.phone}, message us on WhatsApp or book a Teams meeting. 62 Rayapuram Main Road, Tiruppur, Tamil Nadu, India.`,
+    description: `Email ${contact.email}, call ${contact.phone}, message us on WhatsApp or follow us on LinkedIn. 62 Rayapuram Main Road, Tiruppur, Tamil Nadu, India.`,
     keywords: ['contact apparel sourcing agent', 'Tiruppur garment company contact', 'clothing manufacturer India contact'],
-  },
-  'schedule-a-meeting': {
-    title: 'Book a Teams Meeting with GARWEVIA',
-    description: 'Pick a 30-minute Microsoft Teams slot to discuss your knitwear program — product, fabric, quantities, certifications and timelines.',
-    keywords: ['apparel sourcing consultation', 'book meeting clothing manufacturer'],
   },
   'start-a-project': {
     title: 'Request a Quote — Send Your Tech Pack to GARWEVIA',
@@ -84,7 +79,8 @@ const knowsAbout = [
   'Single jersey', 'Piqué', 'Interlock', 'Rib knit', 'French terry', 'Fleece', 'Organic cotton', 'Recycled polyester',
   'Reactive dyeing', 'Garment dyeing', 'Screen printing', 'DTF printing', 'Embroidery',
   'Garment quality control', 'AQL inspection', 'Colourfastness testing', 'Shrinkage testing',
-  'GOTS', 'OEKO-TEX', 'GRS', 'WRAP', 'SMETA', 'amfori BSCI', 'CPSIA', 'REACH',
+  'Garment accessories', 'Woven labels', 'Hang tags', 'Buttons', 'Zippers', 'Drawcords', 'Garment packaging',
+  'GOTS', 'OCS', 'OEKO-TEX', 'GRS', 'RCS', 'ZDHC', 'bluesign', 'Better Cotton', 'WRAP', 'SMETA', 'amfori BSCI', 'SA8000', 'CPSIA', 'REACH',
 ];
 
 const services: [string, string][] = [
@@ -92,7 +88,7 @@ const services: [string, string][] = [
   ['Knitwear manufacturing coordination', '/manufacturing-network'], ['Quality control & AQL inspection', '/quality-assurance'],
   ['Compliance & certification sourcing', '/compliance-sustainability'],
 ];
-const products = ['T-shirts', 'Polo shirts', 'Hoodies', 'Sweatshirts', 'Joggers', 'Leggings', 'Women’s tops', 'Kids T-shirts', 'Baby rompers', 'Pajama sets', 'Activewear tops'];
+const products = ['T-shirts', 'Polo shirts', 'Hoodies', 'Sweatshirts', 'Joggers', 'Leggings', 'Women’s tops', 'Kids T-shirts', 'Baby rompers', 'Pajama sets', 'Activewear tops', 'Woven labels', 'Hang tags', 'Buttons and snaps', 'Zippers', 'Drawcords and elastics', 'Patches and badges', 'Apparel packaging'];
 
 export const organizationLd = {
   '@context': 'https://schema.org',
@@ -113,7 +109,7 @@ export const organizationLd = {
       areaServed: ['United States', 'United Kingdom', 'European Union', 'Canada', 'Australia', 'Middle East', 'Worldwide'],
       knowsAbout,
       contactPoint: [{ '@type': 'ContactPoint', contactType: 'sales', email: contact.email, telephone: '+91 85468 02097', availableLanguage: ['English'] }],
-      ...(contact.whatsapp ? { sameAs: [contact.whatsapp] } : {}),
+      sameAs: [contact.linkedin, contact.whatsapp].filter(Boolean),
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Knitwear sourcing and manufacturing services',
@@ -160,7 +156,8 @@ export const faq: [string, string][] = [
   ['Can you make private label T-shirts, hoodies and polos to my tech pack?', 'Yes. We develop private label and custom knitwear to your tech pack or reference garment — including fabric, GSM, fit, prints, embroidery, labels, hangtags and packaging to your brand standards.'],
   ['What do I need to send for a quotation?', 'A tech pack or reference garment, fabric composition and GSM if known, quantity per style and colour, colour requirements, any certification or testing requirements, target FOB price and your delivery timeline and destination.'],
   ['How long do sampling and bulk production take?', 'Timelines depend on product complexity, fabric development, approvals and order size. We share a time-and-action plan for your program once the requirement is reviewed, and update it at every stage.'],
-  ['Can you source GOTS, OEKO-TEX or GRS certified garments?', 'Yes — selected partner factories may hold GOTS, GRS or OEKO-TEX certification, and WRAP, SMETA or amfori BSCI audit status. Certificate scope and validity are verified for each program; GARWEVIA does not claim these certifications as its own.'],
+  ['Do you also source garment accessories and trims?', 'Yes. We source labels, hang tags, buttons, snaps, zippers, drawcords, elastics, patches, threads and packaging — matched to your brand standards and approved on a trim card. They can be attached in production or supplied as a standalone accessories program.'],
+  ['Can you source GOTS, OEKO-TEX or GRS certified garments?', 'Yes — selected partner factories and suppliers may hold GOTS, OCS, GRS, RCS or OEKO-TEX certification, and WRAP, SMETA, amfori BSCI or SA8000 audit status. Certificate scope and validity are verified for each program; GARWEVIA does not claim these certifications as its own.'],
   ['How do you control quality?', 'Through a documented quality workflow: specification review, fabric and trim approval, lab dips and strike-offs, fit and PP samples, a pre-production meeting, inline inspection, final random inspection to the agreed AQL and packing verification — with reports and photos.'],
   ['Do you work with international brands and ship worldwide?', 'Yes. We work with brands, retailers and sourcing teams abroad, typically on FOB terms, and coordinate packing, documentation and shipment to your destination or forwarder.'],
   ['Why source knitwear from Tiruppur?', 'Tiruppur is India’s largest knitwear cluster, with yarn, knitting, dyeing, printing, embroidery, garmenting and export logistics close together — which shortens development and gives access to a wide range of manufacturing capabilities.'],

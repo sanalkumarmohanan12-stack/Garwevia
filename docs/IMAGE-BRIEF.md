@@ -1,5 +1,7 @@
 # GARWEVIA — Image brief
 
+Current site images are generated illustrative visuals, including a dedicated tops flat-lay. They do not document actual GARWEVIA partner facilities or customer products. Real partner photography remains the priority below.
+
 Who looks at these images: sourcing managers and founders at apparel brands deciding whether to trust a partner in India. They know garments and factories well. An image that looks staged, AI-generated or borrowed from another brand costs credibility faster than no image at all.
 
 All current photography is illustrative and labelled as such on the site. This brief lists what should replace it, in priority order.

@@ -1,111 +1,97 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { Logo } from './components';
-import { lenisRef } from './motion';
+import { useEffect, useState } from 'react';
+import { Icon, LinkedInIcon, Logo, WhatsAppIcon } from './components';
+import { contact, mailHref } from './contact';
 
-// Every important page is reachable from the header: main links, plus a Capabilities dropdown.
-const capabilities: [string, string, string][] = [
+type Item = [label: string, href: string, sub?: string];
+type Group = { label: string; items: Item[] };
+
+const products: Group = { label: 'Products', items: [
+  ['Knitwear', '/products', 'T-shirts, polos, fleece, women, kids & baby, activewear'],
+  ['Accessories & trims', '/products#accessories', 'Labels, tags, buttons, zippers, cords, packaging'],
+] };
+const capabilities: Group = { label: 'Capabilities', items: [
   ['Sourcing services', '/sourcing-services', 'Requirement review to shipment coordination'],
   ['Product development', '/product-development', 'Tech pack, samples, fabric parameters, fit'],
   ['Manufacturing network', '/manufacturing-network', 'Knit fabrics, yarns, dyeing, printing, sewing'],
   ['Quality assurance', '/quality-assurance', 'QC checkpoints, testing, AQL inspection'],
-  ['Compliance & sustainability', '/compliance-sustainability', 'GOTS, GRS, OEKO-TEX, WRAP, SMETA, BSCI, ISO'],
-];
-const before: [string, string][] = [['About', '/about'], ['Products', '/products']];
-const after: [string, string][] = [['How It Works', '/how-it-works'], ['Glossary', '/knitwear-glossary'], ['Contact', '/contact']];
-const explore: [string, string][] = [...before, ...after, ['Schedule a meeting', '/schedule-a-meeting']];
+] };
+const links: Item[] = [['Certifications', '/compliance-sustainability'], ['How it works', '/how-it-works'], ['About', '/about'], ['Contact', '/contact']];
+
+function Chevron() {
+  return <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="m2.5 4.5 3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>;
+}
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const [drop, setDrop] = useState(false);
-  const last = useRef(0);
+  const [drop, setDrop] = useState<string | null>(null);
 
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 40);
-      setHidden(y > 320 && y > last.current + 2);
-      if (y < last.current - 2 || y < 320) setHidden(false);
-      last.current = y;
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  useEffect(() => { document.documentElement.classList.toggle('menu-open', open); }, [open]);
+  const close = () => { setOpen(false); setDrop(null); };
+  const current = (href: string) => (pathname === href.split('#')[0] ? 'page' : undefined);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('menu-open', open);
-    if (open) lenisRef.current?.stop(); else lenisRef.current?.start();
-  }, [open]);
-
-  // The header CTA is the one "Start a project" on every page, except the RFQ page itself.
-  const ctaOff = pathname === '/start-a-project';
-  const close = () => { setOpen(false); setDrop(false); };
-  const inCaps = capabilities.some(([, href]) => href === pathname);
-  const navLink = ([label, href]: [string, string]) => (
-    <Link key={href} href={href} aria-current={pathname === href ? 'page' : undefined}>{label}</Link>
-  );
-  const solid = scrolled || pathname === '/start-a-project';
-  const cls = ['site-header', solid && 'is-scrolled', hidden && !open && 'is-hidden', open && 'is-open'].filter(Boolean).join(' ');
+  const dropdown = (g: Group) => {
+    const isOpen = drop === g.label;
+    const active = g.items.some(([, href]) => pathname === href.split('#')[0]);
+    return (
+      <div key={g.label} className={isOpen ? 'nav-drop is-open' : 'nav-drop'} onMouseEnter={() => setDrop(g.label)} onMouseLeave={() => setDrop(null)}
+        onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDrop(null); }}>
+        <button type="button" className={active ? 'nav-link is-current' : 'nav-link'} aria-expanded={isOpen} onClick={() => setDrop(isOpen ? null : g.label)}>
+          {g.label} <Chevron />
+        </button>
+        <div className="nav-panel">
+          {g.items.map(([label, href, sub]) => (
+            <Link key={href} href={href} onClick={close} aria-current={current(href)}><b>{label}</b><small>{sub}</small></Link>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <header className={cls}>
+    <header className={open ? 'site-header is-open' : 'site-header'}>
+      <div className="topbar">
+        <div className="wrap topbar-inner">
+          <span className="topbar-place">Knitwear &amp; accessories sourcing · Tiruppur, India</span>
+          <div className="topbar-links">
+            <a href={mailHref()}><Icon name="mail" size={15} /> {contact.email}</a>
+            <a href={contact.phoneHref}><Icon name="phone" size={15} /> {contact.phone}</a>
+            {contact.linkedin
+              ? <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><LinkedInIcon size={15} /></a>
+              : <span className="is-pending" title="LinkedIn page coming soon" aria-label="LinkedIn page coming soon"><LinkedInIcon size={15} /></span>}
+            <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><WhatsAppIcon size={16} /></a>
+          </div>
+        </div>
+      </div>
       <div className="wrap header-inner">
         <Logo />
         <nav className="nav" aria-label="Main navigation">
-          {before.map(navLink)}
-          <div className={drop ? 'nav-drop is-open' : 'nav-drop'} onMouseEnter={() => setDrop(true)} onMouseLeave={() => setDrop(false)}
-            onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDrop(false); }}>
-            <button type="button" className={inCaps ? 'nav-drop-btn is-current' : 'nav-drop-btn'} aria-expanded={drop} aria-controls="nav-caps" onClick={() => setDrop(d => !d)}>
-              Capabilities
-              <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="m2.5 4.5 3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-            <div id="nav-caps" className="nav-panel">
-              {capabilities.map(([label, href, sub]) => (
-                <Link key={href} href={href} onClick={close} aria-current={pathname === href ? 'page' : undefined}>
-                  <b>{label}</b><small>{sub}</small>
-                </Link>
-              ))}
-              <Link className="nav-panel-cta" href="/schedule-a-meeting" onClick={close}>
-                <b>Talk to our team</b><small>Book a Teams meeting</small>
-              </Link>
-            </div>
-          </div>
-          {after.map(navLink)}
+          {dropdown(products)}
+          {dropdown(capabilities)}
+          {links.map(([label, href]) => <Link key={href} className="nav-link" href={href} aria-current={current(href)}>{label}</Link>)}
         </nav>
-        <Link className={ctaOff ? 'pill pill-sand header-cta is-off' : 'pill pill-sand header-cta'} href="/start-a-project" tabIndex={ctaOff ? -1 : undefined} aria-hidden={ctaOff || undefined}>Start a project <span className="pill-dot" /></Link>
-        <button className="menu-btn" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="menu-overlay" onClick={() => setOpen(!open)}>
-          <span className="menu-label">{open ? 'Close' : 'Menu'}</span>
-          <span className="menu-lines"><i /><i /></span>
+        {pathname !== '/start-a-project' && <Link className="btn btn-primary header-cta" href="/start-a-project">Send your brief</Link>}
+        <button className="menu-btn" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(!open)}>
+          <span className="menu-lines"><i /><i /><i /></span>
         </button>
       </div>
-      <div id="menu-overlay" className="menu-overlay" data-lenis-prevent aria-hidden={!open} inert={!open}>
-        <div className="wrap menu-grid">
-          <nav className="menu-links" aria-label="Menu">
-            <p className="menu-group">Explore</p>
-            {explore.map(([label, href], i) => (
-              <Link key={href} href={href} onClick={close} style={{ '--i': i } as React.CSSProperties} aria-current={pathname === href ? 'page' : undefined}>
-                <small>{String(i + 1).padStart(2, '0')}</small>{label}
-              </Link>
-            ))}
-          </nav>
-          <nav className="menu-links menu-caps" aria-label="Capabilities">
-            <p className="menu-group">Capabilities</p>
-            {capabilities.map(([label, href, sub], i) => (
-              <Link key={href} href={href} onClick={close} style={{ '--i': i + 3 } as React.CSSProperties} aria-current={pathname === href ? 'page' : undefined}>
-                <span>{label}<em>{sub}</em></span>
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="wrap menu-foot">
-          <span>Tiruppur · Tamil Nadu · India</span>
-          <Link className="pill pill-sand" href="/start-a-project" onClick={close}>Start a project <span className="pill-dot" /></Link>
+      <div id="mobile-menu" className="mobile-menu" hidden={!open}>
+        <div className="wrap">
+          {[products, capabilities].map(g => (
+            <div key={g.label} className="mm-group">
+              <p>{g.label}</p>
+              {g.items.map(([label, href]) => <Link key={href} href={href} onClick={close} aria-current={current(href)}>{label}</Link>)}
+            </div>
+          ))}
+          <div className="mm-group">
+            <p>Company</p>
+            {links.map(([label, href]) => <Link key={href} href={href} onClick={close} aria-current={current(href)}>{label}</Link>)}
+            <Link href="/knitwear-glossary" onClick={close}>Knitwear glossary</Link>
+          </div>
+          <Link className="btn btn-primary mm-cta" href="/start-a-project" onClick={close}>Send your brief</Link>
         </div>
       </div>
     </header>
@@ -126,8 +112,8 @@ export function CookieConsent() {
     <div className="cookie" role="region" aria-label="Cookie preferences">
       <p>We use essential cookies for site functionality. Optional analytics only run with your consent. <Link href="/cookie-policy">Policy</Link></p>
       <div>
-        <button className="pill pill-ghost pill-sm" onClick={() => choose('essential')}>Essential</button>
-        <button className="pill pill-sand pill-sm" onClick={() => choose('all')}>Accept all</button>
+        <button className="btn btn-ghost btn-sm" onClick={() => choose('essential')}>Essential only</button>
+        <button className="btn btn-primary btn-sm" onClick={() => choose('all')}>Accept all</button>
       </div>
     </div>
   );

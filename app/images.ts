@@ -18,25 +18,26 @@ const inspection = '/images/quality-inspection.webp';
 
 export const shots = {
   // Production floors (landscape)
-  floorPeople: { src: floor, alt: 'Sewing line with operators stitching navy knitwear', focus: '70% 50%' },
-  seamstress: { src: floor, alt: 'Operator stitching a navy knit garment on a sewing machine', focus: '80% 55%' },
-  factoryWide: { src: factory, alt: 'Knitwear production floor with knitting, sewing, cutting and packing areas', focus: '50% 50%' },
-  knitting: { src: factory, alt: 'Circular knitting machines producing fabric rolls', focus: '12% 50%' },
-  sewingLines: { src: factory, alt: 'Rows of sewing stations with finished garments', focus: '52% 45%' },
-  packing: { src: factory, alt: 'Folded garments packed into cartons for shipment', focus: '92% 80%' },
-  cutting: { src: cutting, alt: 'Cutter laying paper patterns on stacked navy fabric', focus: '30% 50%' },
-  fabricStacks: { src: cutting, alt: 'Stacks of dyed navy knit fabric on a cutting table', focus: '85% 60%' },
-  measuring: { src: inspection, alt: 'Inspector measuring a navy knit garment with a tape measure', focus: '45% 55%' },
-  swatches: { src: inspection, alt: 'Fabric swatch card and folded knitwear on an inspection table', focus: '88% 70%' },
+  floorPeople: { src: floor, alt: 'Operators sewing knit garments at industrial machines', focus: '76% 50%' },
+  seamstress: { src: floor, alt: 'Operator sewing a grey knit garment at an industrial machine', focus: '80% 55%' },
+  factoryWide: { src: factory, alt: 'Rows of garment sewing stations with operators at work', focus: '50% 50%' },
+  knitting: { src: '/images/knitting-machines.webp', alt: 'Circular knitting machines producing rolls of knit fabric', focus: '60% 50%' },
+  sewingLines: { src: factory, alt: 'Garment operators and sewing stations on a production floor', focus: '48% 45%' },
+  packing: { src: '/images/packing.webp', alt: 'Blank knit garments being folded and packed into cartons', focus: '50% 50%' },
+  cutting: { src: cutting, alt: 'Cutter positioning paper patterns on layers of navy knit fabric', focus: '48% 50%' },
+  fabricStacks: { src: cutting, alt: 'Layers of navy knit fabric on a cutting table', focus: '80% 60%' },
+  measuring: { src: inspection, alt: 'Inspector measuring a navy T-shirt against a specification sheet', focus: '50% 55%' },
+  swatches: { src: '/images/swatches.webp', alt: 'Knit fabric swatches, thread and trims on a development table', focus: '50% 50%' },
 
   // Product flat-lays (consistent, unbranded series)
   range: { src: '/images/apparel-essentials.webp', alt: 'Blank apparel range: T-shirts, hoodie, joggers, sports bra and baby romper', focus: '50% 50%' },
-  tops: { src: '/images/apparel-essentials.webp', alt: 'Stack of blank crew-neck T-shirts in white, black and navy', focus: '0% 18%', zoom: 1.4 },
+  tops: { src: '/images/tops.webp', alt: 'Blank oversized T-shirt, folded crew-neck T-shirts and olive polo shirt', focus: '50% 50%' },
   fleece: { src: '/images/fleece.webp', alt: 'Charcoal fleece hoodie and matching joggers', focus: '50% 45%' },
-  women: { src: '/images/womenswear.webp', alt: 'Rib-knit long-sleeve top, leggings and loungewear set', focus: '50% 45%' },
-  kids: { src: '/images/kidswear.webp', alt: 'Muslin baby romper, kids T-shirt and printed jogger', focus: '50% 40%' },
-  kidsPrint: { src: '/images/kidswear.webp', alt: 'All-over leaf print on a kids jogger', focus: '80% 72%', zoom: 1.5 },
-  performance: { src: '/images/performance.webp', alt: 'Performance long-sleeve training top and leggings', focus: '50% 45%' },
+  women: { src: '/images/womenswear.webp', alt: 'Rib-knit long-sleeve tops, leggings and loungewear set', focus: '50% 45%' },
+  kids: { src: '/images/kidswear.webp', alt: 'Muslin baby romper, kids T-shirt and leaf-print joggers', focus: '50% 40%' },
+  kidsPrint: { src: '/images/kidswear.webp', alt: 'Leaf print on olive kids joggers', focus: '80% 72%', zoom: 1.5 },
+  performance: { src: '/images/performance.webp', alt: 'Blue long-sleeve training top and black leggings', focus: '50% 45%' },
+  underwear: { src: '/images/underwear.webp', alt: 'Blank adult cotton briefs and boxer briefs in neutral colours', focus: '50% 45%' },
 } satisfies Record<string, Shot>;
 
 export type ShotName = keyof typeof shots;
