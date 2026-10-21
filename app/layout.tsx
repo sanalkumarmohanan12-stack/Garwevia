@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo, IBM_Plex_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Header, CookieConsent } from './ui';
 import { Footer, JsonLd, WhatsAppFloat } from './components';
 import { SITE, organizationLd, seo } from './seo';
 
-const sans = Archivo({ subsets: ['latin'], axes: ['wdth'], variable: '--font-sans', display: 'swap' });
-const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
+// Self-hosted variable fonts (SIL OFL): Plus Jakarta Sans for headings, Inter for text.
+const sans = localFont({ src: './fonts/inter.woff2', variable: '--font-sans', weight: '100 900', display: 'swap' });
+const display = localFont({ src: './fonts/jakarta.woff2', variable: '--font-display', weight: '200 800', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -26,7 +27,7 @@ export const viewport: Viewport = { themeColor: '#FFFFFF' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <Header />

@@ -204,22 +204,6 @@ export const qualitySections: Section[] = [
     ],
   },
   {
-    id: 'test-methods', kicker: 'Test methods', title: 'Tested to *recognised standards.*',
-    statement: 'Testing may be conducted to AATCC, ASTM, ISO, EN, BS or buyer-specific standards depending on destination market and product requirements.',
-    intro: 'Commonly referenced AATCC methods for knitwear include:',
-    items: [
-      ['AATCC TM8', 'Colourfastness to crocking (rubbing).'],
-      ['AATCC TM15', 'Colourfastness to perspiration.'],
-      ['AATCC TM61', 'Colourfastness to laundering, accelerated.'],
-      ['AATCC TM107', 'Colourfastness to water.'],
-      ['AATCC TM135', 'Dimensional change of fabrics after home laundering.'],
-      ['AATCC TM150', 'Dimensional change of garments after home laundering.'],
-      ['AATCC TM179', 'Skew change in fabric and garment twist.'],
-      ['AATCC TM143', 'Appearance of apparel after repeated home laundering.'],
-    ],
-    note: 'The test program, laboratory and method editions are agreed per product and destination market; equivalent ISO or buyer methods are used where specified.',
-  },
-  {
     id: 'aql', kicker: 'Final inspection & AQL', title: 'Final random inspection, *to your plan.*',
     intro: 'GARWEVIA can perform or coordinate final random inspections according to agreed buyer specifications. Sampling follows recognised frameworks such as ISO 2859-1 and ANSI / ASQ Z1.4.',
     items: [
@@ -292,6 +276,9 @@ export const productSections: Section[] = [
       { title: 'Hoodies & sweatshirts', points: ['French terry', 'Brushed and unbrushed fleece', '280–450 GSM, subject to availability', 'Rib cuffs and waistband', 'Hood construction', 'Kangaroo pocket'] },
       { title: 'Kids & baby', points: ['Single jersey, interlock and rib', 'Organic cotton options', 'Soft-hand finishes', 'Nickel-free trim options, where required', 'Children’s safety controls'] },
       { title: 'Activewear', points: ['Polyester and polyester / elastane', 'Nylon / elastane', 'Moisture management and quick-dry', 'Stretch and recovery', 'Flatlock and technical seam construction'] },
+      { title: 'Women’s fashion & lounge', points: ['Jersey dresses and skirts', 'Rib-knit tops and sets', 'Leggings', 'Drape and opacity checks', 'Stretch and recovery'] },
+      { title: 'Underwear & sleepwear', points: ['Briefs and boxer briefs', 'Knit undershirts', 'Base layers and pajamas', 'Waistband comfort', 'Wash and fit durability'] },
+      { title: 'Knitted accessories', points: ['Beanies and headbands', 'Scarves and snoods', 'Socks', 'Gloves and neck warmers', 'Specialist partner capability confirmed per brief'] },
     ],
   },
 ];

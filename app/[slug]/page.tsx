@@ -7,6 +7,11 @@ import { breadcrumbLd, glossaryLd, seo, serviceLd } from '../seo';
 import { Accordion } from '../motion';
 import { shots, shotStyle, type Shot } from '../images';
 import { categories, rfqHref } from '../catalog';
+import { KnitAccessoryGrid, Programmes } from '../product-blocks';
+import { StandardsTable } from '../standards';
+import { AtAGlance, CategoryBlock } from '../catalog-view';
+import { testCount } from '../quality';
+import { Workflow } from '../workflow';
 import { Art, CareTags, ClusterMap, KnitStructure, LabDips, Marker, NetworkHub, PomSheet, PrintPlacement, TechPackSheet, Timeline, TraceChain, WorldRoutes, YarnCones } from '../art/Art';
 import { RfqForm } from '../rfq-form';
 import { Glossary } from '../glossary';
@@ -26,7 +31,7 @@ const heroArt: Record<string, React.ReactNode> = {
   'compliance-sustainability': <TraceChain />,
   'how-it-works': <WorldRoutes />,
 };
-const heroPhoto: Record<string, Shot> = { products: shots.range, about: shots.sewingLines };
+const heroPhoto: Record<string, Shot> = { products: shots.range, about: shots.swatches };
 const pages: Record<string, Page> = {
   about: {
     kicker: 'About GARWEVIA', crumb: 'About', view: 'about', title: 'Global sourcing. *Local expertise.*',
@@ -40,8 +45,8 @@ const pages: Record<string, Page> = {
     ],
   },
   products: {
-    kicker: 'Knitwear & accessories', crumb: 'Products', view: 'catalog', title: 'Knitwear and trims, built around *your brief.*',
-    intro: 'Private label knitwear and the accessories that finish it — labels, tags, closures, cords and packaging — developed and sourced through our manufacturing network in Tiruppur.',
+    kicker: 'Knitwear & accessories', crumb: 'Products', view: 'catalog', title: 'A complete knitwear range, built around *your brief.*',
+    intro: 'Private label knitwear across tops, sweats, dresses, lounge, kidswear, performance, underwear and sleepwear — plus knit-made accessories and garment trims.',
     lede: 'Fabric, GSM, fit, decoration, trims and packaging can be reviewed against your brief for every product. MOQ and certification availability depend on the selected manufacturing partner.',
     items: [], note: 'No public prices or fixed MOQs are listed. Send a tech pack or reference garment for project-specific costing.',
     sections: productSections, knit: true,
@@ -75,8 +80,9 @@ const pages: Record<string, Page> = {
     items: [
       { title: 'Fabrics', body: 'Single jersey, rib, interlock, piqué, French terry, fleece, cotton blends and performance fabrics. Organic and recycled options depend on partner availability.', visual: <KnitStructure /> },
       { title: 'Processing', body: 'Dyeing, garment dye, washing and compacting through relevant partners.', visual: <LabDips /> },
-      { title: 'Decoration', body: 'Screen, puff and high-density printing; embroidery, appliqué and specialty techniques subject to partner capability.', visual: <PrintPlacement /> },
-      { title: 'Garment manufacturing', body: 'Pattern, cutting, sewing, finishing and packing coordinated through selected partners.', visual: <Marker /> },
+      { title: 'Printing', body: 'Screen, puff and high-density printing techniques selected for the design and fabric.', visual: <PrintPlacement /> },
+      { title: 'Embroidery', body: 'Tonal and decorative embroidery, appliqué and specialty techniques subject to partner capability.', visual: <Marker /> },
+      { title: 'Garment manufacturing', body: 'Pattern, cutting, sewing, finishing and packing coordinated through selected partners.', visual: <TechPackSheet /> },
     ],
     note: 'Manufacturing partners are selected according to product, capacity, commercial and compliance requirements. Partner facilities are not represented as GARWEVIA-owned factories.',
     sections: networkSections, knit: true,
@@ -105,7 +111,7 @@ const pages: Record<string, Page> = {
     kicker: 'The sourcing journey', crumb: 'How it works', view: 'journey', title: 'From brief *to bulk.*',
     intro: 'A clear, documented sequence gives your team visibility from first requirement to shipment release.',
     lede: 'GARWEVIA combines product knowledge, manufacturing access, technical quality control, compliance awareness and on-ground execution — so international buyers can make knitted apparel in India with greater visibility and control.',
-    heading: 'Eight steps. *Full visibility.*',
+    heading: 'The detailed hand-offs.',
     items: [
       ['Submit your requirement', 'Send a tech pack, reference garment or brief — with fabric, GSM, quantity, target FOB and delivery window if known.'],
       ['Technical review', 'We review construction, fabric parameters, colour, testing, certification and packing requirements.'],
@@ -195,39 +201,23 @@ function Body({ page }: { page: Page }) {
           <nav className="cat-nav" aria-label="Product categories">
             <div className="wrap chips">
               {categories.map(c => <a key={c.slug} className="chip" href={'#' + c.slug}>{c.name} <sup>{c.products.length}</sup></a>)}
-              <a className="chip chip-alt" href="#accessories">Accessories &amp; trims</a>
+              <a className="chip chip-alt" href="#knitted-accessories">Knitted accessories</a>
+              <a className="chip chip-alt" href="#accessories">Trims &amp; packaging</a>
             </div>
           </nav>
-          {categories.map((c, i) => (
-            <section key={c.slug} id={c.slug} className="cat">
-              <figure className="cat-media">
-                <Image src={c.shot.src} alt={c.shot.alt} fill sizes="(max-width: 900px) 100vw, 50vw" style={shotStyle(c.shot)} />
-                <figcaption className="illustrative">Illustrative imagery</figcaption>
-              </figure>
-              <div className="cat-body">
-                <p className="cat-index">{pad(i)} <span>/ {pad(categories.length - 1)}</span></p>
-                <h2>{c.name}</h2>
-                <p className="cat-intro">{c.intro}</p>
-                <ul className="cat-products">
-                  {c.products.map(p => (
-                    <li key={p}>
-                      <Link href={rfqHref(c.name, p)}>
-                        <span>{p}</span>
-                        <small>Request costing <Arrow /></small>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                <div className="cat-fabrics">
-                  <small>Common fabric bases</small>
-                  <div>{c.fabrics.map(fb => <span key={fb}>{fb}</span>)}</div>
-                </div>
-              </div>
-            </section>
-          ))}
+          <AtAGlance />
+          {categories.map((c, i) => <CategoryBlock key={c.slug} c={c} index={i} total={categories.length} />)}
+          <section id="knitted-accessories" className="sec sec-tint">
+            <div className="wrap">
+              <SectionHead kicker="Knit-made accessories" title="The collection *beyond garments.*" intro="Accessories knitted from yarn or knit fabric can be developed alongside apparel. Feasibility, construction, MOQ and specialist partner availability are confirmed for each brief." />
+              <KnitAccessoryGrid />
+              <h3 className="programmes-title">Programmes we build from the same range</h3>
+              <Programmes />
+            </div>
+          </section>
           <section id="accessories" className="sec acc-sec">
             <div className="wrap">
-              <SectionHead kicker="Accessories & trims" title="The details that *finish the garment.*" intro="Sourced to your brand standards and colour references, approved on a trim card, then attached in production — or supplied as a standalone accessories program." />
+              <SectionHead kicker="Trims & packaging" title="The details that *finish the garment.*" intro="Labels, closures, cords, badges and packaging sourced to your brand standards, approved on a trim card, then attached in production or supplied separately." />
               <AccessoryGrid />
               <div className="inline-cta">
                 <p>Send your trim card or artwork and quantities for accessory costing.</p>
@@ -248,6 +238,7 @@ function Body({ page }: { page: Page }) {
     case 'journey':
       return (
         <div className="wrap">
+          {page.crumb === 'How it works' && <Workflow compact />}
           {page.heading && <h2 className="content-heading"><Accent text={page.heading} /></h2>}
           <Steps steps={items.map(it => ({ title: it.title, body: it.body }))} />
         </div>
@@ -257,7 +248,7 @@ function Body({ page }: { page: Page }) {
         <div className="wrap panel-grid">
           {items.map((it, i) => (
             <article key={it.title} className="panel-card">
-              {it.visual && <Art className="panel-card-art" label={it.title}>{it.visual}</Art>}
+              {it.shot ? <figure className="panel-card-photo"><Image src={it.shot.src} alt={it.shot.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={shotStyle(it.shot)} /><figcaption className="illustrative">Illustrative imagery</figcaption></figure> : it.visual && <Art className="panel-card-art" label={it.title}>{it.visual}</Art>}
               <div>
                 <span className="panel-num">{pad(i)}</span>
                 <h3>{it.title}</h3>
@@ -291,7 +282,15 @@ export default async function InnerPage({ params }: { params: Promise<{ slug: st
   return (
     <>
       <PageHero crumb={page.crumb} kicker={page.kicker} title={page.title} intro={page.intro} image={heroPhoto[slug]} art={heroArt[slug]} />
-      {page.sections && <TechIndex sections={page.sections} extra={page.certs ? [['certification-frameworks', 'Certification frameworks']] : []} />}
+      {page.sections && <TechIndex sections={page.sections} extra={page.certs ? [['certification-frameworks', 'Certification frameworks']] : slug === 'quality-assurance' ? [['standards', 'Quality standards']] : []} />}
+      {slug === 'quality-assurance' && (
+        <section className="sec std-sec" id="standards">
+          <div className="wrap">
+            <SectionHead kicker="Quality standards reference" title={'The ' + testCount + ' tests and checks *behind every order.*'} intro="The standards commonly applied to knitted garments, grouped by what they protect. Your quality plan selects the methods, editions and limits for each style and destination market." />
+            <StandardsTable />
+          </div>
+        </section>
+      )}
       {page.certs && (
         <section className="sec" id="certification-frameworks">
           <div className="wrap">
@@ -312,6 +311,10 @@ export default async function InnerPage({ params }: { params: Promise<{ slug: st
         {page.note && <Note>{page.note}</Note>}
         {page.sections && <TechSections sections={page.sections} />}
       </section>
+      {slug === 'quality-assurance' && <aside className="wrap quality-references">
+        <div><Kicker>Reference frameworks</Kicker><h2>Standards selected <em>for your program.</em></h2><p>Method editions, test limits, inspection level and acceptance criteria are set in the buyer-approved quality plan. Reports and partner evidence are reviewed against the specific order.</p></div>
+        <div><a href="https://www.aatcc.org/testing/standards" target="_blank" rel="noopener noreferrer">AATCC textile test methods <Arrow /></a><a href="https://www.iso.org/standard/2859-1" target="_blank" rel="noopener noreferrer">ISO 2859-1 sampling framework <Arrow /></a></div>
+      </aside>}
       {!bare && (page.knit ? <KnitCta /> : <Cta />)}
       <JsonLd data={breadcrumbLd(page.crumb, '/' + slug)} />
       {serviceSlugs.includes(slug) && <JsonLd data={serviceLd(page.kicker, '/' + slug, seo[slug]?.description ?? page.intro)} />}

@@ -106,7 +106,7 @@ export function Footer() {
       <div className="wrap footer-grid">
         <div className="footer-brand">
           <Logo tone="light" />
-          <p>Knitwear and accessories sourcing from Tiruppur, India — one accountable partner from tech pack to shipment.</p>
+          <p>End-to-end knitwear sourcing and manufacturing from Tiruppur, India — one accountable partner from yarn to shipment.</p>
           <address className="footer-contact">
             <a href={mailHref()}><Icon name="mail" /> {contact.email}</a>
             <a href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
@@ -268,4 +268,12 @@ export function Steps({ steps }: { steps: { title: string; body?: string; icon?:
 /** Structured data for search engines (schema.org JSON-LD). */
 export function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }} />;
+}
+
+/** Slow scrolling band of product names (static when the visitor prefers reduced motion). */
+export function Marquee({ words }: { words: string[] }) {
+  const row = (hidden: boolean) => (
+    <ul aria-hidden={hidden || undefined}>{words.map(w => <li key={w}>{w}<span aria-hidden="true">✦</span></li>)}</ul>
+  );
+  return <div className="b-marquee" aria-label={words.join(', ')}><div className="b-marquee-track">{row(false)}{row(true)}</div></div>;
 }

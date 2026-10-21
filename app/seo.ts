@@ -4,6 +4,7 @@
  * structured data, alt text and visible (expandable) FAQ copy. Never as hidden text.
  */
 import { contact } from './contact';
+import { categories, knitAccessories } from './catalog';
 
 export const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://garwevia.com';
 
@@ -12,8 +13,8 @@ type Seo = { title: string; description: string; keywords: string[] };
 /** One primary search intent per page, plus close variants buyers type. */
 export const seo: Record<string, Seo> = {
   home: {
-    title: 'Knitwear & Garment Accessories Sourcing in Tiruppur, India | GARWEVIA',
-    description: 'GARWEVIA is a Tiruppur-based sourcing and manufacturing partner for knitwear and garment accessories — T-shirts, hoodies, polos, babywear, activewear, labels, tags, buttons, zippers and packaging, from tech pack to shipment.',
+    title: 'End-to-End Knitwear Sourcing & Manufacturing in Tiruppur, India | GARWEVIA',
+    description: 'GARWEVIA is an end-to-end sourcing and manufacturing partner in Tiruppur, India — product development, fabric and trims, production, quality control, certifications and shipping for private label knitwear and accessories.',
     keywords: ['apparel manufacturer India', 'knitwear manufacturer India', 'clothing manufacturer Tiruppur', 'garment sourcing agent India', 'private label clothing manufacturer', 'custom T-shirt manufacturer', 'hoodie manufacturer India', 'OEM apparel manufacturer', 'sourcing agent Tiruppur', 'knitwear sourcing India', 'garment accessories supplier India', 'garment trims sourcing', 'woven labels and hang tags supplier'],
   },
   about: {
@@ -22,8 +23,8 @@ export const seo: Record<string, Seo> = {
     keywords: ['apparel sourcing company India', 'Tiruppur sourcing agent', 'garment buying house India', 'knitwear sourcing partner', 'India clothing supplier'],
   },
   products: {
-    title: 'Custom Knitwear & Garment Accessories — T-Shirts, Hoodies, Labels, Trims',
-    description: 'Private label T-shirts, polos, hoodies, joggers, leggings, kidswear and activewear — plus woven labels, hang tags, buttons, zippers, drawcords, patches and packaging — sourced through partners in India.',
+    title: 'Custom Knitwear & Knitted Accessories | GARWEVIA',
+    description: 'Explore private label tops, sweats, dresses, loungewear, kidswear, activewear, underwear and sleepwear, plus knitted accessories, trims and packaging sourced through partners in India.',
     keywords: ['custom T-shirt manufacturer India', 'polo shirt manufacturer', 'hoodie and sweatshirt manufacturer', 'jogger manufacturer', 'legging manufacturer', 'baby romper manufacturer', 'organic babywear manufacturer', 'kidswear manufacturer India', 'activewear manufacturer India', 'blank T-shirt supplier', 'oversized T-shirt manufacturer', 'French terry hoodie manufacturer', 'woven label manufacturer', 'hang tag supplier', 'garment buttons and zippers supplier', 'drawcord and elastic supplier', 'embroidered patch supplier', 'apparel packaging polybags', 'garment trims sourcing India'],
   },
   'sourcing-services': {
@@ -44,7 +45,7 @@ export const seo: Record<string, Seo> = {
   'quality-assurance': {
     title: 'Garment Quality Control & AQL Inspection in India',
     description: 'Knitwear quality control from fabric to final random inspection: GSM, shrinkage, spirality, colourfastness, measurement audits, AQL sampling to ISO 2859-1 / ANSI Z1.4 and packing verification.',
-    keywords: ['garment quality inspection India', 'AQL inspection', 'final random inspection', 'inline inspection', 'garment testing AATCC', 'shrinkage testing', 'colourfastness testing', '4-point fabric inspection', 'third-party inspection Tiruppur', 'QC for apparel'],
+    keywords: ['garment quality inspection India', 'AQL inspection', 'final random inspection', 'inline inspection', 'garment testing AATCC', 'shrinkage testing', 'colourfastness testing', '4-point fabric inspection', 'third-party inspection Tiruppur', 'QC for apparel', 'ISO 105 colourfastness', 'ISO 6330 shrinkage', 'ISO 12945 pilling', 'ISO 13938 bursting strength', 'EN 14682 cords and drawstrings', 'knitted garment quality standards'],
   },
   'compliance-sustainability': {
     title: 'Knitwear Certifications — GOTS, OCS, GRS, OEKO-TEX, WRAP, BSCI, SA8000',
@@ -88,7 +89,7 @@ const services: [string, string][] = [
   ['Knitwear manufacturing coordination', '/manufacturing-network'], ['Quality control & AQL inspection', '/quality-assurance'],
   ['Compliance & certification sourcing', '/compliance-sustainability'],
 ];
-const products = ['T-shirts', 'Polo shirts', 'Hoodies', 'Sweatshirts', 'Joggers', 'Leggings', 'Women’s tops', 'Kids T-shirts', 'Baby rompers', 'Pajama sets', 'Activewear tops', 'Woven labels', 'Hang tags', 'Buttons and snaps', 'Zippers', 'Drawcords and elastics', 'Patches and badges', 'Apparel packaging'];
+const products = [...categories.flatMap(category => category.products), ...knitAccessories.map(a => a.name), 'Woven labels', 'Hang tags', 'Buttons and snaps', 'Zippers', 'Drawcords and elastics', 'Patches and badges', 'Apparel packaging'];
 
 export const organizationLd = {
   '@context': 'https://schema.org',

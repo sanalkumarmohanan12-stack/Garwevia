@@ -9,8 +9,9 @@ type Item = [label: string, href: string, sub?: string];
 type Group = { label: string; items: Item[] };
 
 const products: Group = { label: 'Products', items: [
-  ['Knitwear', '/products', 'T-shirts, polos, fleece, women, kids & baby, activewear'],
-  ['Accessories & trims', '/products#accessories', 'Labels, tags, buttons, zippers, cords, packaging'],
+  ['Knitwear', '/products', 'Tops, sweats, dresses, kidswear, activewear, underwear'],
+  ['Knitted accessories', '/products#knitted-accessories', 'Beanies, scarves, socks, headbands and more'],
+  ['Trims & packaging', '/products#accessories', 'Labels, closures, cords and packaging'],
 ] };
 const capabilities: Group = { label: 'Capabilities', items: [
   ['Sourcing services', '/sourcing-services', 'Requirement review to shipment coordination'],
