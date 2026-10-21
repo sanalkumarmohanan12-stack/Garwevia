@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { AccessoryGrid, Arrow, CertGrid, JsonLd, Kicker, SectionHead } from './components';
+import { Arrow, CertGrid, JsonLd, Kicker, SectionHead } from './components';
 import { Accordion } from './motion';
 import { faq, faqLd, seo } from './seo';
 import { shots, shotStyle } from './images';
 import { categories, knitAccessories, productCount, rfqHref } from './catalog';
 import { Workflow } from './workflow';
 import { StandardsOverview } from './standards';
-import { KnitAccessoryGrid, Programmes } from './product-blocks';
+import { AccessoryGrid, KnitAccessoryGrid, Programmes } from './product-blocks';
 import { testCount } from './quality';
 import { certCount } from './range';
 import { Art, ClusterMap, NetworkHub } from './art/Art';

@@ -4,6 +4,7 @@ import { Arrow, Icon } from './components';
 import { shotStyle } from './images';
 import { rfqHref, type Category } from './catalog';
 import { categorySpecs, commercial, specFor } from './specs';
+import { productImage } from './product-images';
 
 /** Indicative commercial terms, shown once at the top of the Products page. */
 export function AtAGlance() {
@@ -53,8 +54,13 @@ export function CategoryBlock({ c, index, total }: { c: Category; index: number;
         <ul className="style-grid">
           {c.products.map(p => {
             const s = specFor(p);
+            const photo = productImage(p);
             return (
               <li key={p} className="style-card">
+                <figure className="style-photo">
+                  <Image src={photo ?? c.shot.src} alt={photo ? p : c.shot.alt} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 33vw, 20vw" style={photo ? undefined : shotStyle(c.shot)} />
+                  {!photo && <figcaption>Range image</figcaption>}
+                </figure>
                 <h3>{p}</h3>
                 <div className="style-meta">
                   <span><small>Fabric</small>{s.fabric}</span>

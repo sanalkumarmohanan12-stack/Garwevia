@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { shotStyle, type Shot } from './images';
 import { contact, mailHref } from './contact';
-import { accessories, certDisclaimer, certifications, type TrimIcon } from './range';
+import { certDisclaimer, certifications, type TrimIcon } from './range';
 
 export function Arrow() {
   return (
@@ -202,22 +202,6 @@ export function WhatsAppFloat() {
     <a className="wa-float" href={contact.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="Chat with GARWEVIA on WhatsApp">
       <WhatsAppIcon size={28} />
     </a>
-  );
-}
-
-/** Accessories & trims: one card per trim family. `limit` shows the first n items per card. */
-export function AccessoryGrid({ limit }: { limit?: number }) {
-  return (
-    <div className="trim-grid">
-      {accessories.map(g => (
-        <article key={g.name} className="trim-card">
-          <span className="trim-icon"><Icon name={g.icon} size={26} /></span>
-          <h3>{g.name}</h3>
-          <p>{g.intro}</p>
-          <ul>{(limit ? g.items.slice(0, limit) : g.items).map(i => <li key={i}>{i}</li>)}</ul>
-        </article>
-      ))}
-    </div>
   );
 }
 
