@@ -14,6 +14,7 @@ import { testCount } from '../quality';
 import { Workflow } from '../workflow';
 import { Art, CareTags, ClusterMap, KnitStructure, LabDips, Marker, NetworkHub, PomSheet, PrintPlacement, TechPackSheet, Timeline, TraceChain, WorldRoutes, YarnCones } from '../art/Art';
 import { RfqForm } from '../rfq-form';
+import { LandingPage, landingBySlug, landings } from '../landing';
 import { Glossary } from '../glossary';
 import { KnitCta, TechIndex, TechSections, complianceSections, developmentSections, developmentSteps, glossary, networkSections, productSections, qualitySections, qualitySteps, type Section } from '../technical';
 import { ContactChannels } from '../contact-view';
@@ -156,11 +157,13 @@ const serviceSlugs = ['sourcing-services', 'product-development', 'manufacturing
 const pad = (i: number) => String(i + 1).padStart(2, '0');
 
 export function generateStaticParams() {
-  return [...Object.keys(pages), 'start-a-project'].map(slug => ({ slug }));
+  return [...Object.keys(pages), 'start-a-project', ...landings.map(l => l.slug)].map(slug => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const lp = landingBySlug[slug];
+  if (lp) return { title: lp.title, description: lp.description, keywords: lp.keywords, alternates: { canonical: '/' + slug }, openGraph: { title: lp.title, description: lp.description, url: '/' + slug }, twitter: { title: lp.title, description: lp.description } };
   const page = pages[slug];
   const s = seo[slug];
   const title = s?.title ?? (page ? page.title.replaceAll('*', '') : 'Start a Project');
@@ -275,6 +278,7 @@ function Body({ page }: { page: Page }) {
 
 export default async function InnerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (landingBySlug[slug]) return <LandingPage l={landingBySlug[slug]} />;
   if (slug === 'start-a-project') return <><RfqForm /><JsonLd data={breadcrumbLd('Start a project', '/start-a-project')} /></>;
   const page = pages[slug];
   if (!page) notFound();

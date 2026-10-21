@@ -36,8 +36,8 @@ export default function Home() {
       <Image src={shots.range.src} alt="" fill priority sizes="100vw" className="c-hero-img" style={{ objectPosition: '50% 40%' }} />
       <div className="c-hero-shade" aria-hidden="true" />
       <div className="wrap c-hero-inner">
-        <p className="c-eyebrow">End-to-end knitwear sourcing · Tiruppur, India</p>
-        <h1>Your complete manufacturing partner <span>in India.</span></h1>
+        <p className="c-eyebrow">Apparel sourcing company · Tiruppur, India</p>
+        <h1>Knitwear sourcing &amp; manufacturing partner <span>in India.</span></h1>
         <p className="c-lede">From yarn to finished, packed garments — GARWEVIA develops, sources, manufactures, inspects and ships private label knitwear and accessories for international brands. One partner, every stage.</p>
         <div className="hero-ctas"><Link className="btn c-btn-gold" href="/start-a-project">Request a quote <Arrow /></Link><a className="btn c-btn-outline" href="#overview">How we work</a></div>
       </div>

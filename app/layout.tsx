@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: seo.home.title, description: seo.home.description },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   formatDetection: { telephone: false },
+  // Paste the codes from Google Search Console / Bing Webmaster Tools into these environment variables.
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION, other: process.env.BING_SITE_VERIFICATION ? { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } : undefined },
 };
 
 export const viewport: Viewport = { themeColor: '#FFFFFF' };

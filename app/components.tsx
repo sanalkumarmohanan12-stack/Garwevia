@@ -97,6 +97,7 @@ export function Cta({ title = 'Have a tech pack or trim card?', text = 'Send us 
 const footerCols: [string, [string, string][]][] = [
   ['Company', [['About GARWEVIA', '/about'], ['How it works', '/how-it-works'], ['Contact', '/contact'], ['Knitwear glossary', '/knitwear-glossary']]],
   ['Products', [['Knitwear', '/products'], ['Accessories & trims', '/products#accessories'], ['Certifications', '/compliance-sustainability']]],
+  ['Sourcing in India', [['Apparel sourcing company in India', '/apparel-sourcing-company-india'], ['Knitwear manufacturers in Tiruppur', '/knitwear-manufacturers-tiruppur'], ['Private label clothing', '/private-label-clothing-manufacturer-india'], ['Garment sourcing agent', '/garment-sourcing-agent-india']]],
   ['Capabilities', [['Sourcing services', '/sourcing-services'], ['Product development', '/product-development'], ['Manufacturing network', '/manufacturing-network'], ['Quality assurance', '/quality-assurance'], ['Compliance & sustainability', '/compliance-sustainability']]],
 ];
 

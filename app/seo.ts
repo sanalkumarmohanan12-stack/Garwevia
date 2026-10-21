@@ -6,16 +6,16 @@
 import { contact } from './contact';
 import { categories, knitAccessories } from './catalog';
 
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://garwevia.com';
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.garwevia.com';
 
 type Seo = { title: string; description: string; keywords: string[] };
 
 /** One primary search intent per page, plus close variants buyers type. */
 export const seo: Record<string, Seo> = {
   home: {
-    title: 'End-to-End Knitwear Sourcing & Manufacturing in Tiruppur, India | GARWEVIA',
-    description: 'GARWEVIA is an end-to-end sourcing and manufacturing partner in Tiruppur, India — product development, fabric and trims, production, quality control, certifications and shipping for private label knitwear and accessories.',
-    keywords: ['apparel manufacturer India', 'knitwear manufacturer India', 'clothing manufacturer Tiruppur', 'garment sourcing agent India', 'private label clothing manufacturer', 'custom T-shirt manufacturer', 'hoodie manufacturer India', 'OEM apparel manufacturer', 'sourcing agent Tiruppur', 'knitwear sourcing India', 'garment accessories supplier India', 'garment trims sourcing', 'woven labels and hang tags supplier'],
+    title: 'Apparel Sourcing Company in India | Knitwear Manufacturing in Tiruppur | GARWEVIA',
+    description: 'GARWEVIA is an apparel sourcing company in India, based in Tiruppur — end-to-end knitwear sourcing and manufacturing: product development, fabric and trims, production, quality control, certifications and shipping for private label knitwear and accessories.',
+    keywords: ['apparel sourcing company in India', 'apparel sourcing companies in India', 'knitwear sourcing Tiruppur', 'knitwear manufacturers in Tiruppur', 'apparel manufacturer India', 'knitwear manufacturer India', 'clothing manufacturer Tiruppur', 'garment sourcing agent India', 'private label clothing manufacturer', 'custom T-shirt manufacturer', 'hoodie manufacturer India', 'OEM apparel manufacturer', 'sourcing agent Tiruppur', 'knitwear sourcing India', 'garment accessories supplier India', 'garment trims sourcing', 'woven labels and hang tags supplier'],
   },
   about: {
     title: 'About GARWEVIA — Apparel Sourcing Partner in Tiruppur, India',
